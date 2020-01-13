@@ -47,6 +47,7 @@ textarea {
   font-family: $open_sans_font;
   font-size: 22px;
   line-height: 24px;
+  font-weight: 400;
   text-transform: uppercase;
   color: $color_white;
   border-radius: 3px;
@@ -62,22 +63,29 @@ textarea {
   align-items: center;
 }
 
-.in-touch__header {
-  font-family: $raleway__font;
-  font-size: 24px;
-  line-height: 24px;
-  color: $color_white;
-  margin-bottom: 12px;
+.in-touch {
+  text-align: center;
+  &__header {
+    font-family: $raleway__font;
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 400;
+    color: $color_white;
+    margin-bottom: 12px;
+  }
+  &__text {
+    font-family: $open_sans_font;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 38px;
+  }
 }
 
-.in-touch__text {
-  font-family: $open_sans_font;
-  font-size: 14px;
-  line-height: 20px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.socials__link--facebook {
+.socials__link--facebook,
+.socials__link--twitter,
+.socials__link--linkedin {
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -85,5 +93,57 @@ textarea {
   background-image: url(../images/icons/icon-facebook.svg);
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 70%;
+  background-size: 20px;
+}
+
+.socials__link--twitter {
+  background-image: url(../images/icons/icon-twitter.svg);
+  background-color: rgb(62, 194, 243);
+}
+
+.socials__link--linkedin {
+  background-image: url(../images/icons/icon-linkedin.svg);
+}
+
+.socials__wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 38px;
+}
+
+.socials {
+  display: flex;
+  width: 156px;
+  justify-content: space-between;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 70px;
+  &__phone,
+  &__email {
+    font-family: $open_sans_font;
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 700;
+    color: rgb(191, 172, 226);
+  }
+}
+
+.copyright::before{
+  content: "";
+  color: rgba(255, 255, 255, 0.5);
+  height: 2px;
+  width: 100%;
+}
+
+.copyright,
+.rights {
+  font-family: $open_sans_font;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
 }
