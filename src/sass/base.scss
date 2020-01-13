@@ -41,6 +41,7 @@ ol {
 
 a {
   text-decoration: none;
+  display: block;
 }
 
 button {
@@ -51,4 +52,9 @@ button {
 .container {
   width: 290px;
   margin: 0 auto;
+}
+
+* {
+  margin: 0;
+  padding: 0;
 }
