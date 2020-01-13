@@ -37,7 +37,7 @@
     margin-bottom: 50px;
   }
 }
-  
+
 .team-list {
   &__item {
     &:hover .overlay {
@@ -47,6 +47,8 @@
       margin-bottom: 48px;
     }
     &--photo {
+      width: 270px;
+      margin: 0 auto;
       margin-bottom: 17px;
       position: relative;
     }
@@ -71,42 +73,71 @@
 }
 
 .overlay {
-    color: #fff;
-    text-align: center;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(14, 180, 147, 0.80);
-    top: 0;
-    left: 0;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    &__heading{
-        width: 226px;
-        font-family: $open_sans_font;
-        font-size: 16px;
-        line-height: 24px;
-        font-weight: 700;
-        padding: 18px 0px 12px;
-    }
-    &__text{
-        width: 226px;
-        font-family: $open_sans_font;
-        font-size: 16px;
-        line-height: 24px;
-        font-weight: 400;
-        margin-bottom: 64px;
-    }
-    &__socials-list{
-        display: flex;
-        &--item{
-            width: 42px;
-            height: 42px;
-            background-color: rgba(0, 0, 0, 0.3);
-            &:not(:last-child){
-                margin-right: 4px;
-            }
-        }
+  color: #fff;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(14, 180, 147, 0.8);
+  top: 0;
+  left: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  &__heading {
+    width: 226px;
+    font-family: $open_sans_font;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 700;
+    padding: 18px 0px 12px;
+  }
+  &__text {
+    width: 226px;
+    font-family: $open_sans_font;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    margin-bottom: 64px;
+  }
+  &__socials-list {
+    display: flex;
+    &--item {
+      width: 42px;
+      height: 42px;
+      background-color: rgba(0, 0, 0, 0.3);
+      &:hover{
+        background-color: rgba(0, 0, 0, 0.65);
+      }
+      &:not(:last-child) {
+        margin-right: 4px;
+      }
+      & {
+        background-size: 22px;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: pointer;
+      }
+      &:nth-child(1) {
+        background-image: url(../images/icons/icon-twitter.svg);
+      }
+      &:nth-child(2) {
+        background-image: url(../images/icons/icon-facebook.svg);
+      }
+      &:nth-child(3) {
+        background-image: url(../images/icons/icon-linkedin.svg);
+      }
     }
   }
+}
+
+/* MEDIA */
+@media (min-width: 768px) {
+  .container {
+    width: 708px;
+  }
+  .team-list{
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
