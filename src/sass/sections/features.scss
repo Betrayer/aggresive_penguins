@@ -5,8 +5,20 @@
     font-weight: 400;
 }
 
-.feature__board::before {
-    background-image: url(../images/t-m-1.jpg);
-    color: black;
+.feature-li {
+    display: flex;
+    justify-content: space-between;
+}
+
+.feature__board {
+    width: 230px;
+}
+
+.feature__board:before {
+    content: "";
+    width: 30px;
+    height: 30px;
+    background-image: url(../../images/icon-board.svg);
+    background-repeat: no-repeat; 
 }
 
