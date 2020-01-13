@@ -1,0 +1,11 @@
+.section__text {
+    font-family: "Myriad Pro";
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 400;
+}
+
+.feature__board::before {
+    background-image: url(../images/t-m-1.jpg);
+    color: black;
+}
