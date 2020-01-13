@@ -1,0 +1,93 @@
+.visually-hidden:not(:focus):not(:active), 
+input[type=“checkbox”].visually-hidden,
+input[type=“radio”].visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
+.header {
+    position: relative;
+    background-image: url(../../images/header-background.jpg);
+    background-repeat: no-repeat;
+    width: 320px;
+    height: 568px;
+}
+
+.header__nav {
+    position: absolute;
+    left: 0;
+    top: 22px;
+    display: flex;
+    justify-content: space-between;
+    width: 320px;
+    height: 82px;
+    background-color: #fff;
+}
+
+.header__section-name {
+    color: #1ab798;
+}
+
+.header__menu {
+    width: 30px;
+    height: 30px;
+    background-color: black;
+}
+
+.header__span {
+    width: 30px;
+    height: 5px;
+    color: black;
+}
+
+.header__content {
+    position: absolute;
+    left: 0;
+    top: 100px;
+    color: white;
+}
+
+.header__h3 {
+    font-family: "Raleway";
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.header__h4 {
+    font-family: "Open Sans";
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.header__list {
+    font-family: "Open Sans";
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 36px;
+    list-style-image: url(../../images/arrow.png);
+    padding-left: 30px;
+}
+
+.header__link {
+    color: white;
+    background-color: #1ab798;
+    padding: 16px 40px 16px 76px;
+    background-image: url(../../images/clowd.png);
+    background-repeat: no-repeat;
+    border-radius: 5px;
+    background-position-y: 50%;
+    background-position-x: 22px;
+    font-family: "Open Sans";
+    font-size: 20px;
+    font-weight: 600;
+}
+
+  
