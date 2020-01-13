@@ -60,5 +60,7 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+gulpfile.js
+
 # dotenv environment variables file
 .env

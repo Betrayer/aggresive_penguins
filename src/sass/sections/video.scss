@@ -1,0 +1,33 @@
+.page-3{
+    background-color: #31d4e7;
+}
+.page-3-icon-apple,
+.page-3-icon-android{
+    display: block;
+    width: 71px;
+    height: 71px;
+    color: #0098cd;
+    background-color: #0098cd;
+    background-repeat: no-repeat;
+    // background-size: contain;
+    border-radius: 50%;
+    background-position: center;
+
+}
+.page-3-icon-apple{
+       background-image: url(../images/icons/icon-apple.svg);
+       
+}
+
+.page-3-icon-android {
+    background-image: url(../images/icons/icon-android.svg);
+}
+.section-name-video{
+        font-size: 18px;
+        font-family: "Raleway";
+        color: rgb(34, 34, 34);
+        font-weight: bold;
+        text-transform: uppercase;
+       
+      
+}
