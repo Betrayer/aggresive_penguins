@@ -1,27 +1,23 @@
 .customer-section {
   text-align: center;
+  padding: 0px 0px 60px;
   &__heading {
+    width: 156px;
+    margin: 0 auto;
+    position: relative;
     font-family: 'Raleway', sans-serif;
     font-size: 18px;
     line-height: 28px;
     font-weight: 700;
     color: $color_cyan;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 45px;
     &:before,
     &:after {
       content: '';
+      display: block;
       width: 60px;
       height: 1px;
       background-color: #babdc1;
-    }
-    &:before {
-      transform: translate(25px, -15px);
-    }
-    &:after {
-      transform: translate(-25px, -15px);
     }
   }
 }
@@ -29,7 +25,7 @@
 .slide-1 {
   text-align: center;
   margin: 0 auto;
-  background: no-repeat  center left url(../images/“.png);
+  background: no-repeat center left url(../images/“.png);
   &__img {
     width: 100px;
     height: 100px;
@@ -78,17 +74,71 @@
     height: 10px;
     border-radius: 50%;
     background-color: #d4d3d4;
-    margin-bottom: 60px;
     &:not(:last-child) {
       margin-right: 8px;
     }
   }
 }
 
-@media 
-(-webkit-min-device-pixel-ratio: 2), 
-(min-resolution: 192dpi) { 
-    .slide-1__img{
-        background: url(../images/customer-1@2x.png) no-repeat center top /180%;
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .slide-1__img {
+    background: url(../images/customer-1@2x.png) no-repeat center top / 180%;
+  }
+}
+
+@media (max-width: 767px) {
+  .customer-section__heading {
+    &:before {
+      position: absolute;
+      transform: translate(-50px, 12px);
     }
+    &:after {
+      position: absolute;
+      transform: translate(148px, -44px);
+    }
+  }
+  .slide-1__text--tablet{
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .customer-section {
+    padding: 0px 0px 108px;
+    &__heading {
+      width: 590px;
+      margin: 0 auto;
+      font-size: 28px;
+      line-height: 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 62px;
+    }
+  }
+  .slide-1 {
+    background-position: left 53%;
+    &__occupation {
+      margin-bottom: 55px;
+    }
+    &__text {
+      width: 580px;
+      font-size: 18px;
+      line-height: 36px;
+      margin-bottom: 72px;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .slide-1{
+    background-position: 4% 70%;
+    &__occupation {
+      margin-bottom: 100px;
+    }
+    &__text {
+      width: 940px;
+      margin-bottom: 44px;
+    }
+  }
 }
