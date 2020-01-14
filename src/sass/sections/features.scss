@@ -3,10 +3,6 @@
 }
 
 .section__name {
-    margin-bottom: 12px;
-}
-
-.section__container {
     margin: 0 auto;
 }
 
@@ -20,29 +16,23 @@
     text-align: center;
     margin-bottom: 30px;
     text-indent: 20px;
-
 }
 
-.feature-li {
-    display: flex;
-    justify-content: space-between;
-}
 
 .feature__board {
     display: flex;
     justify-content: space-between;
     margin-right: 20px;
-}
-
-.feature__board::before {
-    display: block;
-    content: "";
-    width: 30px;
-    height: 30px;
-    background-image: url(../images/icon-board.png);
-    background-repeat: no-repeat; 
-    background-size: cover;
-    margin-left: 6px;
+    &::before {
+        display: block;
+        content: "";
+        width: 30px;
+        height: 30px;
+        background-image: url(../images/icon-board.png);
+        background-repeat: no-repeat; 
+        background-size: cover;
+        margin-left: 6px;
+    }
 }
 
 .feature__hub::before {
@@ -67,34 +57,41 @@
 
 .feature__block {
     width: 210px;
-}
-
-.feature__name {
-    font-family: "Raleway";
-    font-size: 18px;
-    line-height: 18px;
-    font-weight: 700;
-    margin-bottom: 18px;
-}
-
-.feature__text {
-    font-family: "Open Sans";
-    font-size: 13px;
-    line-height: 24px;
-    margin-bottom: 30px;
+    &--name {
+        font-family: "Raleway";
+        font-size: 18px;
+        line-height: 18px;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+    &--text {
+        font-family: "Open Sans";
+        font-size: 13px;
+        line-height: 24px;
+        margin-bottom: 30px;
+    }
 }
 
 @media (min-width: 768px) {
-.section__text-name {
-    width: 636px;
-}
-.feature__flex {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    width: 354px;
-    height: 600px;
 
-}
+    .section__text-name {
+        width: 630px;
+        font-family: "Open Sans";
+        font-size: 18px;
+        line-height: 36px;
+        margin: 0 auto;
+    }
 
+    .feature__flex {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        width: 354px;
+        height: 600px;
+    }
+
+    .section__name {
+        font-size: 28px;
+       
+    }
 }
