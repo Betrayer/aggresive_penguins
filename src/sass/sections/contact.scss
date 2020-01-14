@@ -105,7 +105,6 @@ textarea {
   background-image: url(../images/icons/icon-facebook.svg);
   background-position: center;
   background-repeat: no-repeat;
-<<<<<<< HEAD
   background-size: 20px;
 }
 
@@ -135,6 +134,7 @@ textarea {
   flex-direction: column;
   align-items: center;
   margin-bottom: 66px;
+
   &__phone,
   &__email {
     font-family: $open_sans_font;
@@ -161,7 +161,4 @@ textarea {
   line-height: 21px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.5);
-=======
-  background-size: 70%;
->>>>>>> team-section-overlay
 }
