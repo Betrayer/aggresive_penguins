@@ -11,6 +11,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 22px;
     &:before,
     &:after {
       content: '';
@@ -25,7 +26,6 @@
     &:after {
       margin-left: 24px;
     }
-    margin-bottom: 22px;
   }
   &__text {
     font-family: $open_sans_font;
@@ -106,7 +106,7 @@
       width: 42px;
       height: 42px;
       background-color: rgba(0, 0, 0, 0.3);
-      &:hover{
+      &:hover {
         background-color: rgba(0, 0, 0, 0.65);
       }
       &:not(:last-child) {
@@ -136,8 +136,46 @@
   .container {
     width: 708px;
   }
-  .team-list{
+  .section {
+    padding: 104px 0px 95px;
+    &__name {
+      margin: 0 auto;
+      margin-bottom: 63px;
+      width: 288px;
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: -1px;
+      &:before {
+        margin-right: 13px;
+      }
+      &:after {
+        margin-left: 13px;
+      }
+    }
+    &__text {
+      width: 550px;
+      margin: 0 auto;
+      margin-bottom: 68px;
+    }
+  }
+
+  .team-list {
+    width: 574px;
+    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
+
+    &__item {
+      &:nth-child(-n + 2){
+        margin-bottom: 55px;
+      }
+      &:nth-child(3){
+        margin-bottom: 0px;
+      }
+      &--name {
+        margin-bottom: 6px;
+      }
+    }
   }
 }
