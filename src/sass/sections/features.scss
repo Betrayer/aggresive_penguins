@@ -1,11 +1,83 @@
-.section__text {
+.features {
+    padding-top: 50px;
+}
+
+.section__name {
+    margin-bottom: 12px;
+}
+
+.section__container {
+    width: 262px;
+    margin: 0 auto;
+}
+
+.section__text-name {
     font-family: "Myriad Pro";
     font-size: 16px;
     line-height: 26px;
     font-weight: 400;
+    text-align: center;
+    margin-bottom: 30px;
+    text-indent: 20px;
+}
+
+.feature-li {
+    display: flex;
+    justify-content: space-between;
+}
+
+.feature__board {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 20px;
 }
 
 .feature__board::before {
-    background-image: url(../images/t-m-1.jpg);
-    color: black;
+    display: block;
+    content: "";
+    width: 30px;
+    height: 30px;
+    background-image: url(../images/icon-board.png);
+    background-repeat: no-repeat; 
+    background-size: cover;
+    margin-left: 6px;
+}
+
+.feature__hub::before {
+    background-image: url(../images/icon-hub.svg);
+}
+
+.feature__thumb::before {
+    background-image: url(../images/icon-thumb.svg);
+}
+
+.feature__star::before {
+    background-image: url(../images/icon-star.svg);
+}
+
+.feature__bell::before {
+    background-image: url(../images/icon-bell.svg);
+}
+
+.feature__share::before {
+    background-image: url(../images/icon-share.svg);
+}
+
+.feature__block {
+    width: 210px;
+}
+
+.feature__name {
+    font-family: "Raleway";
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.feature__text {
+    font-family: "Open Sans";
+    font-size: 13px;
+    line-height: 24px;
+    margin-bottom: 30px;
 }
