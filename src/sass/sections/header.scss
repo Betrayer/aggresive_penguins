@@ -40,6 +40,9 @@ input[type=“radio”].visually-hidden {
 }
 
 .header__section-name {
+    font-family: "Raleway";
+    font-size: 22px;
+    font-weight: 600;
     color: #1ab798;
     vertical-align: auto;
 }
@@ -61,14 +64,14 @@ input[type=“radio”].visually-hidden {
     color: white;
 }
 
-.header__h3 {
+.header__h2 {
     font-family: "Raleway";
     font-size: 25px;
     font-weight: bold;
     margin-bottom: 12px;
 }
 
-.header__h4 {
+.header__h3 {
     font-family: "Open Sans";
     font-size: 18px;
     font-weight: 600;
@@ -85,7 +88,12 @@ input[type=“radio”].visually-hidden {
     margin-bottom: 24px;
 }
 
+.header__li {
+    padding-left: 8px;
+}
+
 .header__link {
+    display: inline-block;
     color: white;
     background-color: #1ab798;
     padding: 16px 40px 16px 76px;
@@ -97,4 +105,5 @@ input[type=“radio”].visually-hidden {
     font-family: "Open Sans";
     font-size: 20px;
     font-weight: 600;
+    margin-left: 20px;
 }
