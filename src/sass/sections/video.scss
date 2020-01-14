@@ -33,6 +33,9 @@
 .window-video{
     padding-bottom: 60px;
 }
+.window-video{
+    padding-bottom: 60px;
+}
 .page-3-icons{
     display: flex;
     justify-content: center;
@@ -60,6 +63,7 @@
         padding-right: 20px;
 
 }
+  
 
 @media (min-width: 768px){
 .window-video-tablet{
@@ -83,6 +87,11 @@ text-align: center;
 .page-3-icons{
     margin-bottom: 58px;
 }
+.section-name-video{
+    font-size: 28px;
+    font-weight: 400;
+}
+
 }
 @media (min-width: 1200px){
 .section-name-video{
@@ -122,11 +131,7 @@ text-align: center;
 
 
 .section-name-video {
-    font-size: 28px;
-    font-family: $raleway__font;
-    color: rgb(34, 34, 34);
-    font-weight: bold;
-    text-transform: uppercase;
+    font-weight: 700;
   }
   
 }
