@@ -133,6 +133,7 @@
 
 /* MEDIA */
 @media (min-width: 768px) {
+<<<<<<< HEAD
   .container {
     width: 708px;
   }
@@ -162,6 +163,9 @@
   .team-list {
     width: 574px;
     margin: 0 auto;
+=======
+  .team-list{
+>>>>>>> video-form-desktop
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

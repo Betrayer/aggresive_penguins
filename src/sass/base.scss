@@ -52,9 +52,17 @@ button {
 .container {
   width: 290px;
   margin: 0 auto;
+<<<<<<< HEAD
   @media (min-width: 768px) {
     width: 708px;
   }
+=======
+
+  @media (min-width: 768px) {
+    width: 708px;
+  }
+
+>>>>>>> video-form-desktop
   @media (min-width: 1200px) {
     width: 1145px;
   }
