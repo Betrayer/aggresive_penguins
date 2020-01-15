@@ -9,7 +9,7 @@
 .section__text-name {
     display: block;
     width: 290px;
-    font-family: "Myriad Pro", sans-serif;
+    font-family: $open_sans_font;
     font-size: 16px;
     line-height: 26px;
     font-weight: 400;
@@ -58,14 +58,14 @@
 .feature__block {
     width: 210px;
     &--name {
-        font-family: "Raleway";
+        font-family: $raleway__font;
         font-size: 18px;
         line-height: 18px;
         font-weight: 700;
         margin-bottom: 18px;
     }
     &--text {
-        font-family: "Open Sans";
+        font-family: $open_sans_font;
         font-size: 13px;
         line-height: 24px;
         margin-bottom: 30px;
@@ -76,7 +76,7 @@
 
     .section__text-name {
         width: 630px;
-        font-family: "Open Sans";
+        font-family: $open_sans_font;
         font-size: 18px;
         line-height: 36px;
         margin: 0 auto;
