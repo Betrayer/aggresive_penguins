@@ -40,30 +40,50 @@ input:focus {
       margin-left: 24px;
     }
   }
-}
 
-.contact-form__name,
-.contact-form__email {
-  width: 270px;
-  height: 44px;
-  border-radius: 3px;
-  background-color: $color_white;
-  margin-bottom: 26px;
-}
+  &-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-.contact-form__textarea {
-  resize: none;
-  border-radius: 7px;
-  background-color: $color_white;
-  width: 270px;
-  height: 174px;
-  margin-bottom: 44px;
-}
+    &__name,
+    &__email {
+      width: 270px;
+      height: 44px;
+      border-radius: 3px;
+      background-color: $color_white;
+      margin-bottom: 26px;
+    }
 
-.contact-form__name,
-.contact-form__email,
-.contact-form__textarea {
-  border: 0px solid;
+    &__textarea {
+      resize: none;
+      border-radius: 7px;
+      background-color: $color_white;
+      width: 270px;
+      height: 174px;
+      margin-bottom: 44px;
+    }
+
+    &__button {
+      font-family: $open_sans_font;
+      font-size: 22px;
+      line-height: 24px;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: $color_white;
+      border-radius: 3px;
+      background-color: rgb(49, 212, 231);
+      width: 170px;
+      height: 50px;
+      margin-bottom: 58px;
+    }
+
+    &__name,
+    &__email,
+    &__textarea {
+      border: 0px solid;
+    }
+  }
 }
 
 input,
@@ -78,26 +98,6 @@ textarea {
 
 textarea {
   padding-top: 12px;
-}
-
-.contact-form__button {
-  font-family: $open_sans_font;
-  font-size: 22px;
-  line-height: 24px;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: $color_white;
-  border-radius: 3px;
-  background-color: rgb(49, 212, 231);
-  width: 170px;
-  height: 50px;
-  margin-bottom: 58px;
-}
-
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .in-touch {
@@ -122,39 +122,40 @@ textarea {
   }
 }
 
-.socials__link--facebook,
-.socials__link--twitter,
-.socials__link--linkedin {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background-color: rgb(59, 89, 151);
-  background-image: url(../images/icons/icon-facebook.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 20px;
-}
-
-.socials__link--twitter {
-  background-image: url(../images/icons/icon-twitter.svg);
-  background-color: rgb(62, 194, 243);
-}
-
-.socials__link--linkedin {
-  background-image: url(../images/icons/icon-linkedin.svg);
-}
-
-.socials__wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 38px;
-}
-
 .socials {
   display: flex;
   width: 156px;
   justify-content: space-between;
+
+  &__wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 38px;
+  }
+
+  &__link--facebook,
+  &__link--twitter,
+  &__link--linkedin {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: rgb(59, 89, 151);
+    background-image: url(../images/icons/icon-facebook.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+  }
+
+  &__link--twitter {
+    background-image: url(../images/icons/icon-twitter.svg);
+    background-color: rgb(62, 194, 243);
+  }
+
+  &__link--linkedin {
+    background-image: url(../images/icons/icon-linkedin.svg);
+  }
 }
+
 
 .contacts {
   display: flex;
@@ -220,6 +221,31 @@ textarea:required:focus:valid {
       padding-top: 66px;
       margin-bottom: 72px;
     }
+
+    &-form {
+      width: 570px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+  
+      &__textarea {
+        width: 570px;
+      }
+  
+      &__button {
+        margin: 0 auto;
+      }
+  
+      &__name,
+      &__email,
+      &__textarea {
+        margin-bottom: 30px;
+      }
+  
+      &__button {
+        margin-bottom: 56px;
+      }
+    }
   }
 
   .contact h2 {
@@ -229,31 +255,6 @@ textarea:required:focus:valid {
   .form__wrapper {
     display: flex;
     justify-content: center;
-  }
-
-  .contact-form {
-    width: 570px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-
-    &__textarea {
-      width: 570px;
-    }
-
-    &__button {
-      margin: 0 auto;
-    }
-
-    &__name,
-    &__email,
-    &__textarea {
-      margin-bottom: 30px;
-    }
-
-    &__button {
-      margin-bottom: 56px;
-    }
   }
 
   .in-touch {
