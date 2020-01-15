@@ -101,6 +101,13 @@
         width: 350px;
     }
 
+    .features {
+        .section__name {
+            margin-top: 128px;
+            margin-bottom: 96px;
+        }
+    }
+
     .section__text-name {
         width: 630px;
         font-family: $open_sans_font;
@@ -138,11 +145,6 @@
 
 @media (min-width: 1200px) {
 
-    .section__name {
-        margin-top: 128px;
-        margin-bottom: 96px;
-    }
-
     .section__text-name {
         width: 1000px;
         margin-bottom: 160px;
@@ -166,7 +168,7 @@
     }
 
     .feature__box {
-        margin-bottom: 96px;
+        margin-bottom: 80px;
         width: 1145px;
     }
 }
