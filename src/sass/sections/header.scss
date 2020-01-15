@@ -175,22 +175,22 @@ input[type=“radio”].visually-hidden {
     margin-top: 160px;
 }
 
-.header__h2 {
-    font-family: "Raleway";
+.header__h3 {
+    font-family: $raleway__font;
     font-size: 25px;
     font-weight: bold;
     margin-bottom: 12px;
 }
 
-.header__h3 {
-    font-family: "Open Sans";
+.header__h4 {
+    font-family: $open_sans_font;
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 20px;
 }
 
 .header__list {
-    font-family: "Open Sans";
+    font-family: $open_sans_font;
     font-size: 12px;
     font-weight: 600;
     line-height: 36px;
@@ -213,7 +213,7 @@ input[type=“radio”].visually-hidden {
     border-radius: 5px;
     background-position-y: 50%;
     background-position-x: 22px;
-    font-family: "Open Sans";
+    font-family: $open_sans_font;
     font-size: 20px;
     font-weight: 600;
     margin-left: 20px;
