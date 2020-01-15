@@ -90,7 +90,6 @@
         font-family: $open_sans_font;
         font-size: 13px;
         line-height: 24px;
-        margin-bottom: 30px;
     }
 }
 
@@ -125,18 +124,23 @@
     .feature__list {
         width: 320px;
         &:nth-child(-n+3) {
-            margin-right: 86px;
+            margin-right: 76px;
         }
     }
 
     .feature__block {
         width: 260px;
-        margin-bottom: 74px;
+        margin-bottom: 104px;
         text-align: left;
     }
 }
 
 @media (min-width: 1200px) {
+
+    .section__name {
+        margin-top: 128px;
+        margin-bottom: 96px;
+    }
 
     .section__text-name {
         width: 1000px;
