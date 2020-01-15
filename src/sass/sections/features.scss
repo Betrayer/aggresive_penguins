@@ -42,7 +42,6 @@
     text-indent: 20px;
 }
 
-
 .feature__board {
     display: flex;
     justify-content: space-between;
@@ -98,7 +97,6 @@
 
 @media (min-width: 768px) {
 
-
     .section__name {
         font-size: 28px;
         width: 350px;
@@ -134,5 +132,34 @@
         width: 260px;
         margin-bottom: 74px;
         text-align: left;
+    }
+}
+
+@media (min-width: 1200px) {
+
+    .section__text-name {
+        width: 1000px;
+        margin-bottom: 160px;
+    }
+
+    .feature__board:nth-child(-n+3) {
+        margin-right: 480px;
+    }
+
+    .feature__star::after {
+        display: block;
+        content: "";
+        background-image: url(../../images/screen.png);
+        width: 400px;
+        height: 750px;
+        background-repeat: no-repeat; 
+        background-size: cover;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -10%);
+    }
+
+    .feature__box {
+        margin-bottom: 96px;
     }
 }
