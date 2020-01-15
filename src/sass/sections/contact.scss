@@ -11,22 +11,33 @@ input:focus {
   background-position: center;
 
   .section__name {
-    font-family: 'Raleway', sans-serif;
-    font-size: 18px;
-    line-height: 36px;
-    font-weight: 700;
-    text-align: center;
-    color: $color_white;
     text-transform: uppercase;
-    padding-top: 54px;
-    margin-bottom: 42px;
+    font-family: $raleway__font;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 700;
+    color: $color_white;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 56px;
+    margin-bottom: 44px;
 
-    &:before,
-    &:after {
-      content: '';
+    &::before,
+    &::after {
+      content: "";
       width: 60px;
       height: 1px;
       background-color: $color_white;
+    }
+
+    &:before {
+      margin-right: 24px;
+    }
+
+    &:after {
+      margin-left: 24px;
     }
   }
 }
