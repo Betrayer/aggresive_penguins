@@ -249,3 +249,19 @@ textarea:required:focus:valid {
     padding-bottom: 24px;
   }
 }
+
+@media (min-width: 1200px) {
+  .contact {
+    background-image: url(../images/contacts_bg_img_desktop.png);
+
+    .section__name {
+      margin-bottom: 122px;
+    }
+  }
+
+  .contact-form,
+  .contact-form__textarea {
+    width: 570px;
+  }
+
+}
