@@ -15,8 +15,8 @@ input[type='“radio”'].visually-hidden {
 
 .head {
   margin: 0 auto;
-  background-color: black;
-  background-image: url(../../images/img.png);
+  background-color: blueviolet;
+  background-image: url(../images/img.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -171,31 +171,31 @@ input[type='“radio”'].visually-hidden {
 }
 
 .header__h3 {
-    font-family: $raleway__font;
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 12px;
+  font-family: $raleway__font;
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .header__h4 {
-    font-family: $open_sans_font;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 20px;
+  font-family: $open_sans_font;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 
 .header__list {
-    font-family: $open_sans_font;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 36px;
-    list-style-image: url(../../images/arrow.png);
-    padding-left: 14px;
-    margin-bottom: 24px;
-    &--li {
-      padding-left: 8px;
-    }
+  font-family: $open_sans_font;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 36px;
+  list-style-image: url(../../images/arrow.png);
+  padding-left: 14px;
+  margin-bottom: 24px;
+  &--li {
+    padding-left: 8px;
   }
+
   &__link {
     display: inline-block;
     color: white;
