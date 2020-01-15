@@ -201,14 +201,12 @@ textarea {
 
 input:required:focus:invalid,
 textarea:required:focus:invalid {
-  border: 2px solid;
-  border-color: rgb(255, 0, 0);
+  box-shadow: 0px 0px 0px 2px rgb(255, 0, 0);
 }
 
 input:required:focus:valid,
 textarea:required:focus:valid {
-  border: 2px solid;
-  border-color: rgb(0, 128, 0);
+  box-shadow: 0px 0px 0px 2px rgb(0, 255, 0);
 }
 
 @media (min-width: 768px) {
