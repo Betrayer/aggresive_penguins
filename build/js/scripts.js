@@ -28866,6 +28866,363 @@ define(["./core", "./var/isFunction", "./core/init", "./manipulation", // clone
   });
   return jQuery;
 });
+define(["../core", "../var/isFunction", "./var/nonce", "./var/rquery", "../ajax"], function (jQuery, isFunction, nonce, rquery) {
+  "use strict";
+
+  var oldCallbacks = [],
+      rjsonp = /(=)\?(?=&|$)|\?\?/; // Default jsonp settings
+
+  jQuery.ajaxSetup({
+    jsonp: "callback",
+    jsonpCallback: function () {
+      var callback = oldCallbacks.pop() || jQuery.expando + "_" + nonce++;
+      this[callback] = true;
+      return callback;
+    }
+  }); // Detect, normalize options and install callbacks for jsonp requests
+
+  jQuery.ajaxPrefilter("json jsonp", function (s, originalSettings, jqXHR) {
+    var callbackName,
+        overwritten,
+        responseContainer,
+        jsonProp = s.jsonp !== false && (rjsonp.test(s.url) ? "url" : typeof s.data === "string" && (s.contentType || "").indexOf("application/x-www-form-urlencoded") === 0 && rjsonp.test(s.data) && "data"); // Handle iff the expected data type is "jsonp" or we have a parameter to set
+
+    if (jsonProp || s.dataTypes[0] === "jsonp") {
+      // Get callback name, remembering preexisting value associated with it
+      callbackName = s.jsonpCallback = isFunction(s.jsonpCallback) ? s.jsonpCallback() : s.jsonpCallback; // Insert callback into url or form data
+
+      if (jsonProp) {
+        s[jsonProp] = s[jsonProp].replace(rjsonp, "$1" + callbackName);
+      } else if (s.jsonp !== false) {
+        s.url += (rquery.test(s.url) ? "&" : "?") + s.jsonp + "=" + callbackName;
+      } // Use data converter to retrieve json after script execution
+
+
+      s.converters["script json"] = function () {
+        if (!responseContainer) {
+          jQuery.error(callbackName + " was not called");
+        }
+
+        return responseContainer[0];
+      }; // Force json dataType
+
+
+      s.dataTypes[0] = "json"; // Install callback
+
+      overwritten = window[callbackName];
+
+      window[callbackName] = function () {
+        responseContainer = arguments;
+      }; // Clean-up function (fires after converters)
+
+
+      jqXHR.always(function () {
+        // If previous value didn't exist - remove it
+        if (overwritten === undefined) {
+          jQuery(window).removeProp(callbackName); // Otherwise restore preexisting value
+        } else {
+          window[callbackName] = overwritten;
+        } // Save back as free
+
+
+        if (s[callbackName]) {
+          // Make sure that re-using the options doesn't screw things around
+          s.jsonpCallback = originalSettings.jsonpCallback; // Save the callback name for future use
+
+          oldCallbacks.push(callbackName);
+        } // Call if it was a function and we have a response
+
+
+        if (responseContainer && isFunction(overwritten)) {
+          overwritten(responseContainer[0]);
+        }
+
+        responseContainer = overwritten = undefined;
+      }); // Delegate to script
+
+      return "script";
+    }
+  });
+});
+define(["../core", "../core/stripAndCollapse", "../var/isFunction", "../core/parseHTML", "../ajax", "../traversing", "../manipulation", "../selector"], function (jQuery, stripAndCollapse, isFunction) {
+  "use strict";
+  /**
+   * Load a url into a page
+   */
+
+  jQuery.fn.load = function (url, params, callback) {
+    var selector,
+        type,
+        response,
+        self = this,
+        off = url.indexOf(" ");
+
+    if (off > -1) {
+      selector = stripAndCollapse(url.slice(off));
+      url = url.slice(0, off);
+    } // If it's a function
+
+
+    if (isFunction(params)) {
+      // We assume that it's the callback
+      callback = params;
+      params = undefined; // Otherwise, build a param string
+    } else if (params && typeof params === "object") {
+      type = "POST";
+    } // If we have elements to modify, make the request
+
+
+    if (self.length > 0) {
+      jQuery.ajax({
+        url: url,
+        // If "type" variable is undefined, then "GET" method will be used.
+        // Make value of this field explicit since
+        // user can override it through ajaxSetup method
+        type: type || "GET",
+        dataType: "html",
+        data: params
+      }).done(function (responseText) {
+        // Save response for use in complete callback
+        response = arguments;
+        self.html(selector ? // If a selector was specified, locate the right elements in a dummy div
+        // Exclude scripts to avoid IE 'Permission Denied' errors
+        jQuery("<div>").append(jQuery.parseHTML(responseText)).find(selector) : // Otherwise use the full result
+        responseText); // If the request succeeds, this function gets "data", "status", "jqXHR"
+        // but they are ignored because response was set above.
+        // If it fails, this function gets "jqXHR", "status", "error"
+      }).always(callback && function (jqXHR, status) {
+        self.each(function () {
+          callback.apply(this, response || [jqXHR.responseText, status, jqXHR]);
+        });
+      });
+    }
+
+    return this;
+  };
+});
+define(["../core"], function (jQuery) {
+  "use strict"; // Cross-browser xml parsing
+
+  jQuery.parseXML = function (data) {
+    var xml;
+
+    if (!data || typeof data !== "string") {
+      return null;
+    } // Support: IE 9 - 11 only
+    // IE throws on parseFromString with invalid input.
+
+
+    try {
+      xml = new window.DOMParser().parseFromString(data, "text/xml");
+    } catch (e) {
+      xml = undefined;
+    }
+
+    if (!xml || xml.getElementsByTagName("parsererror").length) {
+      jQuery.error("Invalid XML: " + data);
+    }
+
+    return xml;
+  };
+
+  return jQuery.parseXML;
+});
+define(["../core", "../var/document", "../ajax"], function (jQuery, document) {
+  "use strict"; // Prevent auto-execution of scripts when no explicit dataType was provided (See gh-2432)
+
+  jQuery.ajaxPrefilter(function (s) {
+    if (s.crossDomain) {
+      s.contents.script = false;
+    }
+  }); // Install script dataType
+
+  jQuery.ajaxSetup({
+    accepts: {
+      script: "text/javascript, application/javascript, " + "application/ecmascript, application/x-ecmascript"
+    },
+    contents: {
+      script: /\b(?:java|ecma)script\b/
+    },
+    converters: {
+      "text script": function (text) {
+        jQuery.globalEval(text);
+        return text;
+      }
+    }
+  }); // Handle cache's special case and crossDomain
+
+  jQuery.ajaxPrefilter("script", function (s) {
+    if (s.cache === undefined) {
+      s.cache = false;
+    }
+
+    if (s.crossDomain) {
+      s.type = "GET";
+    }
+  }); // Bind script tag hack transport
+
+  jQuery.ajaxTransport("script", function (s) {
+    // This transport only deals with cross domain or forced-by-attrs requests
+    if (s.crossDomain || s.scriptAttrs) {
+      var script, callback;
+      return {
+        send: function (_, complete) {
+          script = jQuery("<script>").attr(s.scriptAttrs || {}).prop({
+            charset: s.scriptCharset,
+            src: s.url
+          }).on("load error", callback = function (evt) {
+            script.remove();
+            callback = null;
+
+            if (evt) {
+              complete(evt.type === "error" ? 404 : 200, evt.type);
+            }
+          }); // Use native DOM manipulation to avoid our domManip AJAX trickery
+
+          document.head.appendChild(script[0]);
+        },
+        abort: function () {
+          if (callback) {
+            callback();
+          }
+        }
+      };
+    }
+  });
+});
+define(["../core", "../var/support", "../ajax"], function (jQuery, support) {
+  "use strict";
+
+  jQuery.ajaxSettings.xhr = function () {
+    try {
+      return new window.XMLHttpRequest();
+    } catch (e) {}
+  };
+
+  var xhrSuccessStatus = {
+    // File protocol always yields status code 0, assume 200
+    0: 200,
+    // Support: IE <=9 only
+    // #1450: sometimes IE returns 1223 when it should be 204
+    1223: 204
+  },
+      xhrSupported = jQuery.ajaxSettings.xhr();
+  support.cors = !!xhrSupported && "withCredentials" in xhrSupported;
+  support.ajax = xhrSupported = !!xhrSupported;
+  jQuery.ajaxTransport(function (options) {
+    var callback, errorCallback; // Cross domain only allowed if supported through XMLHttpRequest
+
+    if (support.cors || xhrSupported && !options.crossDomain) {
+      return {
+        send: function (headers, complete) {
+          var i,
+              xhr = options.xhr();
+          xhr.open(options.type, options.url, options.async, options.username, options.password); // Apply custom fields if provided
+
+          if (options.xhrFields) {
+            for (i in options.xhrFields) {
+              xhr[i] = options.xhrFields[i];
+            }
+          } // Override mime type if needed
+
+
+          if (options.mimeType && xhr.overrideMimeType) {
+            xhr.overrideMimeType(options.mimeType);
+          } // X-Requested-With header
+          // For cross-domain requests, seeing as conditions for a preflight are
+          // akin to a jigsaw puzzle, we simply never set it to be sure.
+          // (it can always be set on a per-request basis or even using ajaxSetup)
+          // For same-domain requests, won't change header if already provided.
+
+
+          if (!options.crossDomain && !headers["X-Requested-With"]) {
+            headers["X-Requested-With"] = "XMLHttpRequest";
+          } // Set headers
+
+
+          for (i in headers) {
+            xhr.setRequestHeader(i, headers[i]);
+          } // Callback
+
+
+          callback = function (type) {
+            return function () {
+              if (callback) {
+                callback = errorCallback = xhr.onload = xhr.onerror = xhr.onabort = xhr.ontimeout = xhr.onreadystatechange = null;
+
+                if (type === "abort") {
+                  xhr.abort();
+                } else if (type === "error") {
+                  // Support: IE <=9 only
+                  // On a manual native abort, IE9 throws
+                  // errors on any property access that is not readyState
+                  if (typeof xhr.status !== "number") {
+                    complete(0, "error");
+                  } else {
+                    complete( // File: protocol always yields status 0; see #8605, #14207
+                    xhr.status, xhr.statusText);
+                  }
+                } else {
+                  complete(xhrSuccessStatus[xhr.status] || xhr.status, xhr.statusText, // Support: IE <=9 only
+                  // IE9 has no XHR2 but throws on binary (trac-11426)
+                  // For XHR2 non-text, let the caller handle it (gh-2498)
+                  (xhr.responseType || "text") !== "text" || typeof xhr.responseText !== "string" ? {
+                    binary: xhr.response
+                  } : {
+                    text: xhr.responseText
+                  }, xhr.getAllResponseHeaders());
+                }
+              }
+            };
+          }; // Listen to events
+
+
+          xhr.onload = callback();
+          errorCallback = xhr.onerror = xhr.ontimeout = callback("error"); // Support: IE 9 only
+          // Use onreadystatechange to replace onabort
+          // to handle uncaught aborts
+
+          if (xhr.onabort !== undefined) {
+            xhr.onabort = errorCallback;
+          } else {
+            xhr.onreadystatechange = function () {
+              // Check readyState before timeout as it changes
+              if (xhr.readyState === 4) {
+                // Allow onerror to be called first,
+                // but that will not handle a native abort
+                // Also, save errorCallback to a variable
+                // as xhr.onerror cannot be accessed
+                window.setTimeout(function () {
+                  if (callback) {
+                    errorCallback();
+                  }
+                });
+              }
+            };
+          } // Create the abort callback
+
+
+          callback = callback("abort");
+
+          try {
+            // Do send the request (this may raise an exception)
+            xhr.send(options.hasContent && options.data || null);
+          } catch (e) {
+            // #14683: Only rethrow if this hasn't been notified as an error yet
+            if (callback) {
+              throw e;
+            }
+          }
+        },
+        abort: function () {
+          if (callback) {
+            callback();
+          }
+        }
+      };
+    }
+  });
+});
 define(["../core", "../core/access", "../core/nodeName", "./support", "../var/rnothtmlwhite", "../selector"], function (jQuery, access, nodeName, support, rnothtmlwhite) {
   "use strict";
 
@@ -29462,362 +29819,373 @@ define(["../core", "../core/stripAndCollapse", "./support", "../core/nodeName", 
     }
   });
 });
-define(["../core", "../var/isFunction", "./var/nonce", "./var/rquery", "../ajax"], function (jQuery, isFunction, nonce, rquery) {
+define(function () {
   "use strict";
 
-  var oldCallbacks = [],
-      rjsonp = /(=)\?(?=&|$)|\?\?/; // Default jsonp settings
-
-  jQuery.ajaxSetup({
-    jsonp: "callback",
-    jsonpCallback: function () {
-      var callback = oldCallbacks.pop() || jQuery.expando + "_" + nonce++;
-      this[callback] = true;
-      return callback;
-    }
-  }); // Detect, normalize options and install callbacks for jsonp requests
-
-  jQuery.ajaxPrefilter("json jsonp", function (s, originalSettings, jqXHR) {
-    var callbackName,
-        overwritten,
-        responseContainer,
-        jsonProp = s.jsonp !== false && (rjsonp.test(s.url) ? "url" : typeof s.data === "string" && (s.contentType || "").indexOf("application/x-www-form-urlencoded") === 0 && rjsonp.test(s.data) && "data"); // Handle iff the expected data type is "jsonp" or we have a parameter to set
-
-    if (jsonProp || s.dataTypes[0] === "jsonp") {
-      // Get callback name, remembering preexisting value associated with it
-      callbackName = s.jsonpCallback = isFunction(s.jsonpCallback) ? s.jsonpCallback() : s.jsonpCallback; // Insert callback into url or form data
-
-      if (jsonProp) {
-        s[jsonProp] = s[jsonProp].replace(rjsonp, "$1" + callbackName);
-      } else if (s.jsonp !== false) {
-        s.url += (rquery.test(s.url) ? "&" : "?") + s.jsonp + "=" + callbackName;
-      } // Use data converter to retrieve json after script execution
+  function addGetHookIf(conditionFn, hookFn) {
+    // Define the hook, we'll check on the first run if it's really needed.
+    return {
+      get: function () {
+        if (conditionFn()) {
+          // Hook not needed (or it's not possible to use it due
+          // to missing dependency), remove it.
+          delete this.get;
+          return;
+        } // Hook needed; redefine it so that the support test is not executed again.
 
 
-      s.converters["script json"] = function () {
-        if (!responseContainer) {
-          jQuery.error(callbackName + " was not called");
-        }
+        return (this.get = hookFn).apply(this, arguments);
+      }
+    };
+  }
 
-        return responseContainer[0];
-      }; // Force json dataType
-
-
-      s.dataTypes[0] = "json"; // Install callback
-
-      overwritten = window[callbackName];
-
-      window[callbackName] = function () {
-        responseContainer = arguments;
-      }; // Clean-up function (fires after converters)
-
-
-      jqXHR.always(function () {
-        // If previous value didn't exist - remove it
-        if (overwritten === undefined) {
-          jQuery(window).removeProp(callbackName); // Otherwise restore preexisting value
-        } else {
-          window[callbackName] = overwritten;
-        } // Save back as free
-
-
-        if (s[callbackName]) {
-          // Make sure that re-using the options doesn't screw things around
-          s.jsonpCallback = originalSettings.jsonpCallback; // Save the callback name for future use
-
-          oldCallbacks.push(callbackName);
-        } // Call if it was a function and we have a response
-
-
-        if (responseContainer && isFunction(overwritten)) {
-          overwritten(responseContainer[0]);
-        }
-
-        responseContainer = overwritten = undefined;
-      }); // Delegate to script
-
-      return "script";
-    }
-  });
+  return addGetHookIf;
 });
-define(["../core", "../core/stripAndCollapse", "../var/isFunction", "../core/parseHTML", "../ajax", "../traversing", "../manipulation", "../selector"], function (jQuery, stripAndCollapse, isFunction) {
+define(["../core", "../var/rcssNum"], function (jQuery, rcssNum) {
   "use strict";
-  /**
-   * Load a url into a page
-   */
 
-  jQuery.fn.load = function (url, params, callback) {
-    var selector,
-        type,
-        response,
-        self = this,
-        off = url.indexOf(" ");
-
-    if (off > -1) {
-      selector = stripAndCollapse(url.slice(off));
-      url = url.slice(0, off);
-    } // If it's a function
-
-
-    if (isFunction(params)) {
-      // We assume that it's the callback
-      callback = params;
-      params = undefined; // Otherwise, build a param string
-    } else if (params && typeof params === "object") {
-      type = "POST";
-    } // If we have elements to modify, make the request
-
-
-    if (self.length > 0) {
-      jQuery.ajax({
-        url: url,
-        // If "type" variable is undefined, then "GET" method will be used.
-        // Make value of this field explicit since
-        // user can override it through ajaxSetup method
-        type: type || "GET",
-        dataType: "html",
-        data: params
-      }).done(function (responseText) {
-        // Save response for use in complete callback
-        response = arguments;
-        self.html(selector ? // If a selector was specified, locate the right elements in a dummy div
-        // Exclude scripts to avoid IE 'Permission Denied' errors
-        jQuery("<div>").append(jQuery.parseHTML(responseText)).find(selector) : // Otherwise use the full result
-        responseText); // If the request succeeds, this function gets "data", "status", "jqXHR"
-        // but they are ignored because response was set above.
-        // If it fails, this function gets "jqXHR", "status", "error"
-      }).always(callback && function (jqXHR, status) {
-        self.each(function () {
-          callback.apply(this, response || [jqXHR.responseText, status, jqXHR]);
-        });
-      });
-    }
-
-    return this;
-  };
-});
-define(["../core"], function (jQuery) {
-  "use strict"; // Cross-browser xml parsing
-
-  jQuery.parseXML = function (data) {
-    var xml;
-
-    if (!data || typeof data !== "string") {
-      return null;
-    } // Support: IE 9 - 11 only
-    // IE throws on parseFromString with invalid input.
-
-
-    try {
-      xml = new window.DOMParser().parseFromString(data, "text/xml");
-    } catch (e) {
-      xml = undefined;
-    }
-
-    if (!xml || xml.getElementsByTagName("parsererror").length) {
-      jQuery.error("Invalid XML: " + data);
-    }
-
-    return xml;
-  };
-
-  return jQuery.parseXML;
-});
-define(["../core", "../var/document", "../ajax"], function (jQuery, document) {
-  "use strict"; // Prevent auto-execution of scripts when no explicit dataType was provided (See gh-2432)
-
-  jQuery.ajaxPrefilter(function (s) {
-    if (s.crossDomain) {
-      s.contents.script = false;
-    }
-  }); // Install script dataType
-
-  jQuery.ajaxSetup({
-    accepts: {
-      script: "text/javascript, application/javascript, " + "application/ecmascript, application/x-ecmascript"
+  function adjustCSS(elem, prop, valueParts, tween) {
+    var adjusted,
+        scale,
+        maxIterations = 20,
+        currentValue = tween ? function () {
+      return tween.cur();
+    } : function () {
+      return jQuery.css(elem, prop, "");
     },
-    contents: {
-      script: /\b(?:java|ecma)script\b/
-    },
-    converters: {
-      "text script": function (text) {
-        jQuery.globalEval(text);
-        return text;
+        initial = currentValue(),
+        unit = valueParts && valueParts[3] || (jQuery.cssNumber[prop] ? "" : "px"),
+        // Starting value computation is required for potential unit mismatches
+    initialInUnit = elem.nodeType && (jQuery.cssNumber[prop] || unit !== "px" && +initial) && rcssNum.exec(jQuery.css(elem, prop));
+
+    if (initialInUnit && initialInUnit[3] !== unit) {
+      // Support: Firefox <=54
+      // Halve the iteration target value to prevent interference from CSS upper bounds (gh-2144)
+      initial = initial / 2; // Trust units reported by jQuery.css
+
+      unit = unit || initialInUnit[3]; // Iteratively approximate from a nonzero starting point
+
+      initialInUnit = +initial || 1;
+
+      while (maxIterations--) {
+        // Evaluate and update our best guess (doubling guesses that zero out).
+        // Finish if the scale equals or crosses 1 (making the old*new product non-positive).
+        jQuery.style(elem, prop, initialInUnit + unit);
+
+        if ((1 - scale) * (1 - (scale = currentValue() / initial || 0.5)) <= 0) {
+          maxIterations = 0;
+        }
+
+        initialInUnit = initialInUnit / scale;
+      }
+
+      initialInUnit = initialInUnit * 2;
+      jQuery.style(elem, prop, initialInUnit + unit); // Make sure we update the tween properties later on
+
+      valueParts = valueParts || [];
+    }
+
+    if (valueParts) {
+      initialInUnit = +initialInUnit || +initial || 0; // Apply relative offset (+=/-=) if specified
+
+      adjusted = valueParts[1] ? initialInUnit + (valueParts[1] + 1) * valueParts[2] : +valueParts[2];
+
+      if (tween) {
+        tween.unit = unit;
+        tween.start = initialInUnit;
+        tween.end = adjusted;
       }
     }
-  }); // Handle cache's special case and crossDomain
 
-  jQuery.ajaxPrefilter("script", function (s) {
-    if (s.cache === undefined) {
-      s.cache = false;
-    }
+    return adjusted;
+  }
 
-    if (s.crossDomain) {
-      s.type = "GET";
-    }
-  }); // Bind script tag hack transport
-
-  jQuery.ajaxTransport("script", function (s) {
-    // This transport only deals with cross domain or forced-by-attrs requests
-    if (s.crossDomain || s.scriptAttrs) {
-      var script, callback;
-      return {
-        send: function (_, complete) {
-          script = jQuery("<script>").attr(s.scriptAttrs || {}).prop({
-            charset: s.scriptCharset,
-            src: s.url
-          }).on("load error", callback = function (evt) {
-            script.remove();
-            callback = null;
-
-            if (evt) {
-              complete(evt.type === "error" ? 404 : 200, evt.type);
-            }
-          }); // Use native DOM manipulation to avoid our domManip AJAX trickery
-
-          document.head.appendChild(script[0]);
-        },
-        abort: function () {
-          if (callback) {
-            callback();
-          }
-        }
-      };
-    }
-  });
+  return adjustCSS;
 });
-define(["../core", "../var/support", "../ajax"], function (jQuery, support) {
+define(["../core", "../core/isAttached", "./var/rboxStyle", "./var/rnumnonpx", "./var/getStyles", "./support"], function (jQuery, isAttached, rboxStyle, rnumnonpx, getStyles, support) {
   "use strict";
 
-  jQuery.ajaxSettings.xhr = function () {
-    try {
-      return new window.XMLHttpRequest();
-    } catch (e) {}
+  function curCSS(elem, name, computed) {
+    var width,
+        minWidth,
+        maxWidth,
+        ret,
+        // Support: Firefox 51+
+    // Retrieving style before computed somehow
+    // fixes an issue with getting wrong values
+    // on detached elements
+    style = elem.style;
+    computed = computed || getStyles(elem); // getPropertyValue is needed for:
+    //   .css('filter') (IE 9 only, #12537)
+    //   .css('--customProperty) (#3144)
+
+    if (computed) {
+      ret = computed.getPropertyValue(name) || computed[name];
+
+      if (ret === "" && !isAttached(elem)) {
+        ret = jQuery.style(elem, name);
+      } // A tribute to the "awesome hack by Dean Edwards"
+      // Android Browser returns percentage for some values,
+      // but width seems to be reliably pixels.
+      // This is against the CSSOM draft spec:
+      // https://drafts.csswg.org/cssom/#resolved-values
+
+
+      if (!support.pixelBoxStyles() && rnumnonpx.test(ret) && rboxStyle.test(name)) {
+        // Remember the original values
+        width = style.width;
+        minWidth = style.minWidth;
+        maxWidth = style.maxWidth; // Put in the new values to get a computed value out
+
+        style.minWidth = style.maxWidth = style.width = ret;
+        ret = computed.width; // Revert the changed values
+
+        style.width = width;
+        style.minWidth = minWidth;
+        style.maxWidth = maxWidth;
+      }
+    }
+
+    return ret !== undefined ? // Support: IE <=9 - 11 only
+    // IE returns zIndex value as an integer.
+    ret + "" : ret;
+  }
+
+  return curCSS;
+});
+define(["../var/document", "../core"], function (document, jQuery) {
+  "use strict";
+
+  var cssPrefixes = ["Webkit", "Moz", "ms"],
+      emptyStyle = document.createElement("div").style,
+      vendorProps = {}; // Return a vendor-prefixed property or undefined
+
+  function vendorPropName(name) {
+    // Check for vendor prefixed names
+    var capName = name[0].toUpperCase() + name.slice(1),
+        i = cssPrefixes.length;
+
+    while (i--) {
+      name = cssPrefixes[i] + capName;
+
+      if (name in emptyStyle) {
+        return name;
+      }
+    }
+  } // Return a potentially-mapped jQuery.cssProps or vendor prefixed property
+
+
+  function finalPropName(name) {
+    var final = jQuery.cssProps[name] || vendorProps[name];
+
+    if (final) {
+      return final;
+    }
+
+    if (name in emptyStyle) {
+      return name;
+    }
+
+    return vendorProps[name] = vendorPropName(name) || name;
+  }
+
+  return finalPropName;
+});
+define(["../core", "../selector"], function (jQuery) {
+  "use strict";
+
+  jQuery.expr.pseudos.hidden = function (elem) {
+    return !jQuery.expr.pseudos.visible(elem);
   };
 
-  var xhrSuccessStatus = {
-    // File protocol always yields status code 0, assume 200
-    0: 200,
-    // Support: IE <=9 only
-    // #1450: sometimes IE returns 1223 when it should be 204
-    1223: 204
-  },
-      xhrSupported = jQuery.ajaxSettings.xhr();
-  support.cors = !!xhrSupported && "withCredentials" in xhrSupported;
-  support.ajax = xhrSupported = !!xhrSupported;
-  jQuery.ajaxTransport(function (options) {
-    var callback, errorCallback; // Cross domain only allowed if supported through XMLHttpRequest
+  jQuery.expr.pseudos.visible = function (elem) {
+    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+  };
+});
+define(["../core", "../data/var/dataPriv", "../css/var/isHiddenWithinTree"], function (jQuery, dataPriv, isHiddenWithinTree) {
+  "use strict";
 
-    if (support.cors || xhrSupported && !options.crossDomain) {
-      return {
-        send: function (headers, complete) {
-          var i,
-              xhr = options.xhr();
-          xhr.open(options.type, options.url, options.async, options.username, options.password); // Apply custom fields if provided
+  var defaultDisplayMap = {};
 
-          if (options.xhrFields) {
-            for (i in options.xhrFields) {
-              xhr[i] = options.xhrFields[i];
-            }
-          } // Override mime type if needed
+  function getDefaultDisplay(elem) {
+    var temp,
+        doc = elem.ownerDocument,
+        nodeName = elem.nodeName,
+        display = defaultDisplayMap[nodeName];
 
+    if (display) {
+      return display;
+    }
 
-          if (options.mimeType && xhr.overrideMimeType) {
-            xhr.overrideMimeType(options.mimeType);
-          } // X-Requested-With header
-          // For cross-domain requests, seeing as conditions for a preflight are
-          // akin to a jigsaw puzzle, we simply never set it to be sure.
-          // (it can always be set on a per-request basis or even using ajaxSetup)
-          // For same-domain requests, won't change header if already provided.
+    temp = doc.body.appendChild(doc.createElement(nodeName));
+    display = jQuery.css(temp, "display");
+    temp.parentNode.removeChild(temp);
 
+    if (display === "none") {
+      display = "block";
+    }
 
-          if (!options.crossDomain && !headers["X-Requested-With"]) {
-            headers["X-Requested-With"] = "XMLHttpRequest";
-          } // Set headers
+    defaultDisplayMap[nodeName] = display;
+    return display;
+  }
 
+  function showHide(elements, show) {
+    var display,
+        elem,
+        values = [],
+        index = 0,
+        length = elements.length; // Determine new display value for elements that need to change
 
-          for (i in headers) {
-            xhr.setRequestHeader(i, headers[i]);
-          } // Callback
+    for (; index < length; index++) {
+      elem = elements[index];
 
+      if (!elem.style) {
+        continue;
+      }
 
-          callback = function (type) {
-            return function () {
-              if (callback) {
-                callback = errorCallback = xhr.onload = xhr.onerror = xhr.onabort = xhr.ontimeout = xhr.onreadystatechange = null;
+      display = elem.style.display;
 
-                if (type === "abort") {
-                  xhr.abort();
-                } else if (type === "error") {
-                  // Support: IE <=9 only
-                  // On a manual native abort, IE9 throws
-                  // errors on any property access that is not readyState
-                  if (typeof xhr.status !== "number") {
-                    complete(0, "error");
-                  } else {
-                    complete( // File: protocol always yields status 0; see #8605, #14207
-                    xhr.status, xhr.statusText);
-                  }
-                } else {
-                  complete(xhrSuccessStatus[xhr.status] || xhr.status, xhr.statusText, // Support: IE <=9 only
-                  // IE9 has no XHR2 but throws on binary (trac-11426)
-                  // For XHR2 non-text, let the caller handle it (gh-2498)
-                  (xhr.responseType || "text") !== "text" || typeof xhr.responseText !== "string" ? {
-                    binary: xhr.response
-                  } : {
-                    text: xhr.responseText
-                  }, xhr.getAllResponseHeaders());
-                }
-              }
-            };
-          }; // Listen to events
+      if (show) {
+        // Since we force visibility upon cascade-hidden elements, an immediate (and slow)
+        // check is required in this first loop unless we have a nonempty display value (either
+        // inline or about-to-be-restored)
+        if (display === "none") {
+          values[index] = dataPriv.get(elem, "display") || null;
 
-
-          xhr.onload = callback();
-          errorCallback = xhr.onerror = xhr.ontimeout = callback("error"); // Support: IE 9 only
-          // Use onreadystatechange to replace onabort
-          // to handle uncaught aborts
-
-          if (xhr.onabort !== undefined) {
-            xhr.onabort = errorCallback;
-          } else {
-            xhr.onreadystatechange = function () {
-              // Check readyState before timeout as it changes
-              if (xhr.readyState === 4) {
-                // Allow onerror to be called first,
-                // but that will not handle a native abort
-                // Also, save errorCallback to a variable
-                // as xhr.onerror cannot be accessed
-                window.setTimeout(function () {
-                  if (callback) {
-                    errorCallback();
-                  }
-                });
-              }
-            };
-          } // Create the abort callback
-
-
-          callback = callback("abort");
-
-          try {
-            // Do send the request (this may raise an exception)
-            xhr.send(options.hasContent && options.data || null);
-          } catch (e) {
-            // #14683: Only rethrow if this hasn't been notified as an error yet
-            if (callback) {
-              throw e;
-            }
-          }
-        },
-        abort: function () {
-          if (callback) {
-            callback();
+          if (!values[index]) {
+            elem.style.display = "";
           }
         }
-      };
+
+        if (elem.style.display === "" && isHiddenWithinTree(elem)) {
+          values[index] = getDefaultDisplay(elem);
+        }
+      } else {
+        if (display !== "none") {
+          values[index] = "none"; // Remember what we're overwriting
+
+          dataPriv.set(elem, "display", display);
+        }
+      }
+    } // Set the display of the elements in a second loop to avoid constant reflow
+
+
+    for (index = 0; index < length; index++) {
+      if (values[index] != null) {
+        elements[index].style.display = values[index];
+      }
+    }
+
+    return elements;
+  }
+
+  jQuery.fn.extend({
+    show: function () {
+      return showHide(this, true);
+    },
+    hide: function () {
+      return showHide(this);
+    },
+    toggle: function (state) {
+      if (typeof state === "boolean") {
+        return state ? this.show() : this.hide();
+      }
+
+      return this.each(function () {
+        if (isHiddenWithinTree(this)) {
+          jQuery(this).show();
+        } else {
+          jQuery(this).hide();
+        }
+      });
     }
   });
+  return showHide;
+});
+define(["../core", "../var/document", "../var/documentElement", "../var/support"], function (jQuery, document, documentElement, support) {
+  "use strict";
+
+  (function () {
+    // Executing both pixelPosition & boxSizingReliable tests require only one layout
+    // so they're executed at the same time to save the second computation.
+    function computeStyleTests() {
+      // This is a singleton, we need to execute it only once
+      if (!div) {
+        return;
+      }
+
+      container.style.cssText = "position:absolute;left:-11111px;width:60px;" + "margin-top:1px;padding:0;border:0";
+      div.style.cssText = "position:relative;display:block;box-sizing:border-box;overflow:scroll;" + "margin:auto;border:1px;padding:1px;" + "width:60%;top:1%";
+      documentElement.appendChild(container).appendChild(div);
+      var divStyle = window.getComputedStyle(div);
+      pixelPositionVal = divStyle.top !== "1%"; // Support: Android 4.0 - 4.3 only, Firefox <=3 - 44
+
+      reliableMarginLeftVal = roundPixelMeasures(divStyle.marginLeft) === 12; // Support: Android 4.0 - 4.3 only, Safari <=9.1 - 10.1, iOS <=7.0 - 9.3
+      // Some styles come back with percentage values, even though they shouldn't
+
+      div.style.right = "60%";
+      pixelBoxStylesVal = roundPixelMeasures(divStyle.right) === 36; // Support: IE 9 - 11 only
+      // Detect misreporting of content dimensions for box-sizing:border-box elements
+
+      boxSizingReliableVal = roundPixelMeasures(divStyle.width) === 36; // Support: IE 9 only
+      // Detect overflow:scroll screwiness (gh-3699)
+      // Support: Chrome <=64
+      // Don't get tricked when zoom affects offsetWidth (gh-4029)
+
+      div.style.position = "absolute";
+      scrollboxSizeVal = roundPixelMeasures(div.offsetWidth / 3) === 12;
+      documentElement.removeChild(container); // Nullify the div so it wouldn't be stored in the memory and
+      // it will also be a sign that checks already performed
+
+      div = null;
+    }
+
+    function roundPixelMeasures(measure) {
+      return Math.round(parseFloat(measure));
+    }
+
+    var pixelPositionVal,
+        boxSizingReliableVal,
+        scrollboxSizeVal,
+        pixelBoxStylesVal,
+        reliableMarginLeftVal,
+        container = document.createElement("div"),
+        div = document.createElement("div"); // Finish early in limited (non-browser) environments
+
+    if (!div.style) {
+      return;
+    } // Support: IE <=9 - 11 only
+    // Style of cloned element affects source element cloned (#8908)
+
+
+    div.style.backgroundClip = "content-box";
+    div.cloneNode(true).style.backgroundClip = "";
+    support.clearCloneStyle = div.style.backgroundClip === "content-box";
+    jQuery.extend(support, {
+      boxSizingReliable: function () {
+        computeStyleTests();
+        return boxSizingReliableVal;
+      },
+      pixelBoxStyles: function () {
+        computeStyleTests();
+        return pixelBoxStylesVal;
+      },
+      pixelPosition: function () {
+        computeStyleTests();
+        return pixelPositionVal;
+      },
+      reliableMarginLeft: function () {
+        computeStyleTests();
+        return reliableMarginLeftVal;
+      },
+      scrollboxSize: function () {
+        computeStyleTests();
+        return scrollboxSizeVal;
+      }
+    });
+  })();
+
+  return support;
 });
 define(["../core", "../core/toType", "../var/isFunction"], function (jQuery, toType, isFunction) {
   "use strict"; // Multifunctional method to get and set values of a collection
@@ -30303,374 +30671,6 @@ define(["../var/class2type", "../var/toString"], function (class2type, toString)
 
   return toType;
 });
-define(function () {
-  "use strict";
-
-  function addGetHookIf(conditionFn, hookFn) {
-    // Define the hook, we'll check on the first run if it's really needed.
-    return {
-      get: function () {
-        if (conditionFn()) {
-          // Hook not needed (or it's not possible to use it due
-          // to missing dependency), remove it.
-          delete this.get;
-          return;
-        } // Hook needed; redefine it so that the support test is not executed again.
-
-
-        return (this.get = hookFn).apply(this, arguments);
-      }
-    };
-  }
-
-  return addGetHookIf;
-});
-define(["../core", "../var/rcssNum"], function (jQuery, rcssNum) {
-  "use strict";
-
-  function adjustCSS(elem, prop, valueParts, tween) {
-    var adjusted,
-        scale,
-        maxIterations = 20,
-        currentValue = tween ? function () {
-      return tween.cur();
-    } : function () {
-      return jQuery.css(elem, prop, "");
-    },
-        initial = currentValue(),
-        unit = valueParts && valueParts[3] || (jQuery.cssNumber[prop] ? "" : "px"),
-        // Starting value computation is required for potential unit mismatches
-    initialInUnit = elem.nodeType && (jQuery.cssNumber[prop] || unit !== "px" && +initial) && rcssNum.exec(jQuery.css(elem, prop));
-
-    if (initialInUnit && initialInUnit[3] !== unit) {
-      // Support: Firefox <=54
-      // Halve the iteration target value to prevent interference from CSS upper bounds (gh-2144)
-      initial = initial / 2; // Trust units reported by jQuery.css
-
-      unit = unit || initialInUnit[3]; // Iteratively approximate from a nonzero starting point
-
-      initialInUnit = +initial || 1;
-
-      while (maxIterations--) {
-        // Evaluate and update our best guess (doubling guesses that zero out).
-        // Finish if the scale equals or crosses 1 (making the old*new product non-positive).
-        jQuery.style(elem, prop, initialInUnit + unit);
-
-        if ((1 - scale) * (1 - (scale = currentValue() / initial || 0.5)) <= 0) {
-          maxIterations = 0;
-        }
-
-        initialInUnit = initialInUnit / scale;
-      }
-
-      initialInUnit = initialInUnit * 2;
-      jQuery.style(elem, prop, initialInUnit + unit); // Make sure we update the tween properties later on
-
-      valueParts = valueParts || [];
-    }
-
-    if (valueParts) {
-      initialInUnit = +initialInUnit || +initial || 0; // Apply relative offset (+=/-=) if specified
-
-      adjusted = valueParts[1] ? initialInUnit + (valueParts[1] + 1) * valueParts[2] : +valueParts[2];
-
-      if (tween) {
-        tween.unit = unit;
-        tween.start = initialInUnit;
-        tween.end = adjusted;
-      }
-    }
-
-    return adjusted;
-  }
-
-  return adjustCSS;
-});
-define(["../core", "../core/isAttached", "./var/rboxStyle", "./var/rnumnonpx", "./var/getStyles", "./support"], function (jQuery, isAttached, rboxStyle, rnumnonpx, getStyles, support) {
-  "use strict";
-
-  function curCSS(elem, name, computed) {
-    var width,
-        minWidth,
-        maxWidth,
-        ret,
-        // Support: Firefox 51+
-    // Retrieving style before computed somehow
-    // fixes an issue with getting wrong values
-    // on detached elements
-    style = elem.style;
-    computed = computed || getStyles(elem); // getPropertyValue is needed for:
-    //   .css('filter') (IE 9 only, #12537)
-    //   .css('--customProperty) (#3144)
-
-    if (computed) {
-      ret = computed.getPropertyValue(name) || computed[name];
-
-      if (ret === "" && !isAttached(elem)) {
-        ret = jQuery.style(elem, name);
-      } // A tribute to the "awesome hack by Dean Edwards"
-      // Android Browser returns percentage for some values,
-      // but width seems to be reliably pixels.
-      // This is against the CSSOM draft spec:
-      // https://drafts.csswg.org/cssom/#resolved-values
-
-
-      if (!support.pixelBoxStyles() && rnumnonpx.test(ret) && rboxStyle.test(name)) {
-        // Remember the original values
-        width = style.width;
-        minWidth = style.minWidth;
-        maxWidth = style.maxWidth; // Put in the new values to get a computed value out
-
-        style.minWidth = style.maxWidth = style.width = ret;
-        ret = computed.width; // Revert the changed values
-
-        style.width = width;
-        style.minWidth = minWidth;
-        style.maxWidth = maxWidth;
-      }
-    }
-
-    return ret !== undefined ? // Support: IE <=9 - 11 only
-    // IE returns zIndex value as an integer.
-    ret + "" : ret;
-  }
-
-  return curCSS;
-});
-define(["../var/document", "../core"], function (document, jQuery) {
-  "use strict";
-
-  var cssPrefixes = ["Webkit", "Moz", "ms"],
-      emptyStyle = document.createElement("div").style,
-      vendorProps = {}; // Return a vendor-prefixed property or undefined
-
-  function vendorPropName(name) {
-    // Check for vendor prefixed names
-    var capName = name[0].toUpperCase() + name.slice(1),
-        i = cssPrefixes.length;
-
-    while (i--) {
-      name = cssPrefixes[i] + capName;
-
-      if (name in emptyStyle) {
-        return name;
-      }
-    }
-  } // Return a potentially-mapped jQuery.cssProps or vendor prefixed property
-
-
-  function finalPropName(name) {
-    var final = jQuery.cssProps[name] || vendorProps[name];
-
-    if (final) {
-      return final;
-    }
-
-    if (name in emptyStyle) {
-      return name;
-    }
-
-    return vendorProps[name] = vendorPropName(name) || name;
-  }
-
-  return finalPropName;
-});
-define(["../core", "../selector"], function (jQuery) {
-  "use strict";
-
-  jQuery.expr.pseudos.hidden = function (elem) {
-    return !jQuery.expr.pseudos.visible(elem);
-  };
-
-  jQuery.expr.pseudos.visible = function (elem) {
-    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
-  };
-});
-define(["../core", "../data/var/dataPriv", "../css/var/isHiddenWithinTree"], function (jQuery, dataPriv, isHiddenWithinTree) {
-  "use strict";
-
-  var defaultDisplayMap = {};
-
-  function getDefaultDisplay(elem) {
-    var temp,
-        doc = elem.ownerDocument,
-        nodeName = elem.nodeName,
-        display = defaultDisplayMap[nodeName];
-
-    if (display) {
-      return display;
-    }
-
-    temp = doc.body.appendChild(doc.createElement(nodeName));
-    display = jQuery.css(temp, "display");
-    temp.parentNode.removeChild(temp);
-
-    if (display === "none") {
-      display = "block";
-    }
-
-    defaultDisplayMap[nodeName] = display;
-    return display;
-  }
-
-  function showHide(elements, show) {
-    var display,
-        elem,
-        values = [],
-        index = 0,
-        length = elements.length; // Determine new display value for elements that need to change
-
-    for (; index < length; index++) {
-      elem = elements[index];
-
-      if (!elem.style) {
-        continue;
-      }
-
-      display = elem.style.display;
-
-      if (show) {
-        // Since we force visibility upon cascade-hidden elements, an immediate (and slow)
-        // check is required in this first loop unless we have a nonempty display value (either
-        // inline or about-to-be-restored)
-        if (display === "none") {
-          values[index] = dataPriv.get(elem, "display") || null;
-
-          if (!values[index]) {
-            elem.style.display = "";
-          }
-        }
-
-        if (elem.style.display === "" && isHiddenWithinTree(elem)) {
-          values[index] = getDefaultDisplay(elem);
-        }
-      } else {
-        if (display !== "none") {
-          values[index] = "none"; // Remember what we're overwriting
-
-          dataPriv.set(elem, "display", display);
-        }
-      }
-    } // Set the display of the elements in a second loop to avoid constant reflow
-
-
-    for (index = 0; index < length; index++) {
-      if (values[index] != null) {
-        elements[index].style.display = values[index];
-      }
-    }
-
-    return elements;
-  }
-
-  jQuery.fn.extend({
-    show: function () {
-      return showHide(this, true);
-    },
-    hide: function () {
-      return showHide(this);
-    },
-    toggle: function (state) {
-      if (typeof state === "boolean") {
-        return state ? this.show() : this.hide();
-      }
-
-      return this.each(function () {
-        if (isHiddenWithinTree(this)) {
-          jQuery(this).show();
-        } else {
-          jQuery(this).hide();
-        }
-      });
-    }
-  });
-  return showHide;
-});
-define(["../core", "../var/document", "../var/documentElement", "../var/support"], function (jQuery, document, documentElement, support) {
-  "use strict";
-
-  (function () {
-    // Executing both pixelPosition & boxSizingReliable tests require only one layout
-    // so they're executed at the same time to save the second computation.
-    function computeStyleTests() {
-      // This is a singleton, we need to execute it only once
-      if (!div) {
-        return;
-      }
-
-      container.style.cssText = "position:absolute;left:-11111px;width:60px;" + "margin-top:1px;padding:0;border:0";
-      div.style.cssText = "position:relative;display:block;box-sizing:border-box;overflow:scroll;" + "margin:auto;border:1px;padding:1px;" + "width:60%;top:1%";
-      documentElement.appendChild(container).appendChild(div);
-      var divStyle = window.getComputedStyle(div);
-      pixelPositionVal = divStyle.top !== "1%"; // Support: Android 4.0 - 4.3 only, Firefox <=3 - 44
-
-      reliableMarginLeftVal = roundPixelMeasures(divStyle.marginLeft) === 12; // Support: Android 4.0 - 4.3 only, Safari <=9.1 - 10.1, iOS <=7.0 - 9.3
-      // Some styles come back with percentage values, even though they shouldn't
-
-      div.style.right = "60%";
-      pixelBoxStylesVal = roundPixelMeasures(divStyle.right) === 36; // Support: IE 9 - 11 only
-      // Detect misreporting of content dimensions for box-sizing:border-box elements
-
-      boxSizingReliableVal = roundPixelMeasures(divStyle.width) === 36; // Support: IE 9 only
-      // Detect overflow:scroll screwiness (gh-3699)
-      // Support: Chrome <=64
-      // Don't get tricked when zoom affects offsetWidth (gh-4029)
-
-      div.style.position = "absolute";
-      scrollboxSizeVal = roundPixelMeasures(div.offsetWidth / 3) === 12;
-      documentElement.removeChild(container); // Nullify the div so it wouldn't be stored in the memory and
-      // it will also be a sign that checks already performed
-
-      div = null;
-    }
-
-    function roundPixelMeasures(measure) {
-      return Math.round(parseFloat(measure));
-    }
-
-    var pixelPositionVal,
-        boxSizingReliableVal,
-        scrollboxSizeVal,
-        pixelBoxStylesVal,
-        reliableMarginLeftVal,
-        container = document.createElement("div"),
-        div = document.createElement("div"); // Finish early in limited (non-browser) environments
-
-    if (!div.style) {
-      return;
-    } // Support: IE <=9 - 11 only
-    // Style of cloned element affects source element cloned (#8908)
-
-
-    div.style.backgroundClip = "content-box";
-    div.cloneNode(true).style.backgroundClip = "";
-    support.clearCloneStyle = div.style.backgroundClip === "content-box";
-    jQuery.extend(support, {
-      boxSizingReliable: function () {
-        computeStyleTests();
-        return boxSizingReliableVal;
-      },
-      pixelBoxStyles: function () {
-        computeStyleTests();
-        return pixelBoxStylesVal;
-      },
-      pixelPosition: function () {
-        computeStyleTests();
-        return pixelPositionVal;
-      },
-      reliableMarginLeft: function () {
-        computeStyleTests();
-        return reliableMarginLeftVal;
-      },
-      scrollboxSize: function () {
-        computeStyleTests();
-        return scrollboxSizeVal;
-      }
-    });
-  })();
-
-  return support;
-});
 define(["../core", "../core/camelCase", "../var/rnothtmlwhite", "./var/acceptData"], function (jQuery, camelCase, rnothtmlwhite, acceptData) {
   "use strict";
 
@@ -30815,118 +30815,6 @@ define(["../core", "../deferred"], function (jQuery) {
       window.console.warn("jQuery.Deferred exception: " + error.message, error.stack, stack);
     }
   };
-});
-define(["../core", "../selector", "../effects"], function (jQuery) {
-  "use strict";
-
-  jQuery.expr.pseudos.animated = function (elem) {
-    return jQuery.grep(jQuery.timers, function (fn) {
-      return elem === fn.elem;
-    }).length;
-  };
-});
-define(["../core", "../css/finalPropName", "../css"], function (jQuery, finalPropName) {
-  "use strict";
-
-  function Tween(elem, options, prop, end, easing) {
-    return new Tween.prototype.init(elem, options, prop, end, easing);
-  }
-
-  jQuery.Tween = Tween;
-  Tween.prototype = {
-    constructor: Tween,
-    init: function (elem, options, prop, end, easing, unit) {
-      this.elem = elem;
-      this.prop = prop;
-      this.easing = easing || jQuery.easing._default;
-      this.options = options;
-      this.start = this.now = this.cur();
-      this.end = end;
-      this.unit = unit || (jQuery.cssNumber[prop] ? "" : "px");
-    },
-    cur: function () {
-      var hooks = Tween.propHooks[this.prop];
-      return hooks && hooks.get ? hooks.get(this) : Tween.propHooks._default.get(this);
-    },
-    run: function (percent) {
-      var eased,
-          hooks = Tween.propHooks[this.prop];
-
-      if (this.options.duration) {
-        this.pos = eased = jQuery.easing[this.easing](percent, this.options.duration * percent, 0, 1, this.options.duration);
-      } else {
-        this.pos = eased = percent;
-      }
-
-      this.now = (this.end - this.start) * eased + this.start;
-
-      if (this.options.step) {
-        this.options.step.call(this.elem, this.now, this);
-      }
-
-      if (hooks && hooks.set) {
-        hooks.set(this);
-      } else {
-        Tween.propHooks._default.set(this);
-      }
-
-      return this;
-    }
-  };
-  Tween.prototype.init.prototype = Tween.prototype;
-  Tween.propHooks = {
-    _default: {
-      get: function (tween) {
-        var result; // Use a property on the element directly when it is not a DOM element,
-        // or when there is no matching style property that exists.
-
-        if (tween.elem.nodeType !== 1 || tween.elem[tween.prop] != null && tween.elem.style[tween.prop] == null) {
-          return tween.elem[tween.prop];
-        } // Passing an empty string as a 3rd parameter to .css will automatically
-        // attempt a parseFloat and fallback to a string if the parse fails.
-        // Simple values such as "10px" are parsed to Float;
-        // complex values such as "rotate(1rad)" are returned as-is.
-
-
-        result = jQuery.css(tween.elem, tween.prop, ""); // Empty strings, null, undefined and "auto" are converted to 0.
-
-        return !result || result === "auto" ? 0 : result;
-      },
-      set: function (tween) {
-        // Use step hook for back compat.
-        // Use cssHook if its there.
-        // Use .style if available and use plain properties where available.
-        if (jQuery.fx.step[tween.prop]) {
-          jQuery.fx.step[tween.prop](tween);
-        } else if (tween.elem.nodeType === 1 && (jQuery.cssHooks[tween.prop] || tween.elem.style[finalPropName(tween.prop)] != null)) {
-          jQuery.style(tween.elem, tween.prop, tween.now + tween.unit);
-        } else {
-          tween.elem[tween.prop] = tween.now;
-        }
-      }
-    }
-  }; // Support: IE <=9 only
-  // Panic based approach to setting things on disconnected nodes
-
-  Tween.propHooks.scrollTop = Tween.propHooks.scrollLeft = {
-    set: function (tween) {
-      if (tween.elem.nodeType && tween.elem.parentNode) {
-        tween.elem[tween.prop] = tween.now;
-      }
-    }
-  };
-  jQuery.easing = {
-    linear: function (p) {
-      return p;
-    },
-    swing: function (p) {
-      return 0.5 - Math.cos(p * Math.PI) / 2;
-    },
-    _default: "swing"
-  };
-  jQuery.fx = Tween.prototype.init; // Back compat <1.8 extension point
-
-  jQuery.fx.step = {};
 });
 define(["../core", "../event"], function (jQuery) {
   "use strict"; // Attach a bunch of functions for handling common AJAX events
@@ -31176,6 +31064,118 @@ define(["../core", "../var/document", "../data/var/dataPriv", "../data/var/accep
     }
   });
   return jQuery;
+});
+define(["../core", "../selector", "../effects"], function (jQuery) {
+  "use strict";
+
+  jQuery.expr.pseudos.animated = function (elem) {
+    return jQuery.grep(jQuery.timers, function (fn) {
+      return elem === fn.elem;
+    }).length;
+  };
+});
+define(["../core", "../css/finalPropName", "../css"], function (jQuery, finalPropName) {
+  "use strict";
+
+  function Tween(elem, options, prop, end, easing) {
+    return new Tween.prototype.init(elem, options, prop, end, easing);
+  }
+
+  jQuery.Tween = Tween;
+  Tween.prototype = {
+    constructor: Tween,
+    init: function (elem, options, prop, end, easing, unit) {
+      this.elem = elem;
+      this.prop = prop;
+      this.easing = easing || jQuery.easing._default;
+      this.options = options;
+      this.start = this.now = this.cur();
+      this.end = end;
+      this.unit = unit || (jQuery.cssNumber[prop] ? "" : "px");
+    },
+    cur: function () {
+      var hooks = Tween.propHooks[this.prop];
+      return hooks && hooks.get ? hooks.get(this) : Tween.propHooks._default.get(this);
+    },
+    run: function (percent) {
+      var eased,
+          hooks = Tween.propHooks[this.prop];
+
+      if (this.options.duration) {
+        this.pos = eased = jQuery.easing[this.easing](percent, this.options.duration * percent, 0, 1, this.options.duration);
+      } else {
+        this.pos = eased = percent;
+      }
+
+      this.now = (this.end - this.start) * eased + this.start;
+
+      if (this.options.step) {
+        this.options.step.call(this.elem, this.now, this);
+      }
+
+      if (hooks && hooks.set) {
+        hooks.set(this);
+      } else {
+        Tween.propHooks._default.set(this);
+      }
+
+      return this;
+    }
+  };
+  Tween.prototype.init.prototype = Tween.prototype;
+  Tween.propHooks = {
+    _default: {
+      get: function (tween) {
+        var result; // Use a property on the element directly when it is not a DOM element,
+        // or when there is no matching style property that exists.
+
+        if (tween.elem.nodeType !== 1 || tween.elem[tween.prop] != null && tween.elem.style[tween.prop] == null) {
+          return tween.elem[tween.prop];
+        } // Passing an empty string as a 3rd parameter to .css will automatically
+        // attempt a parseFloat and fallback to a string if the parse fails.
+        // Simple values such as "10px" are parsed to Float;
+        // complex values such as "rotate(1rad)" are returned as-is.
+
+
+        result = jQuery.css(tween.elem, tween.prop, ""); // Empty strings, null, undefined and "auto" are converted to 0.
+
+        return !result || result === "auto" ? 0 : result;
+      },
+      set: function (tween) {
+        // Use step hook for back compat.
+        // Use cssHook if its there.
+        // Use .style if available and use plain properties where available.
+        if (jQuery.fx.step[tween.prop]) {
+          jQuery.fx.step[tween.prop](tween);
+        } else if (tween.elem.nodeType === 1 && (jQuery.cssHooks[tween.prop] || tween.elem.style[finalPropName(tween.prop)] != null)) {
+          jQuery.style(tween.elem, tween.prop, tween.now + tween.unit);
+        } else {
+          tween.elem[tween.prop] = tween.now;
+        }
+      }
+    }
+  }; // Support: IE <=9 only
+  // Panic based approach to setting things on disconnected nodes
+
+  Tween.propHooks.scrollTop = Tween.propHooks.scrollLeft = {
+    set: function (tween) {
+      if (tween.elem.nodeType && tween.elem.parentNode) {
+        tween.elem[tween.prop] = tween.now;
+      }
+    }
+  };
+  jQuery.easing = {
+    linear: function (p) {
+      return p;
+    },
+    swing: function (p) {
+      return 0.5 - Math.cos(p * Math.PI) / 2;
+    },
+    _default: "swing"
+  };
+  jQuery.fx = Tween.prototype.init; // Back compat <1.8 extension point
+
+  jQuery.fx.step = {};
 });
 define(["../core"], function (jQuery) {
   "use strict"; // Register as a named AMD module, since jQuery can be concatenated with other
@@ -34592,12 +34592,6 @@ define(function () {
   return /\?/;
 });
 define(function () {
-  "use strict"; // rsingleTag matches a string consisting of a single HTML element with no attributes
-  // and captures the element's name
-
-  return /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
-});
-define(function () {
   "use strict";
 
   return ["Top", "Right", "Bottom", "Left"];
@@ -34671,6 +34665,12 @@ define(function () {
 
     return ret;
   };
+});
+define(function () {
+  "use strict"; // rsingleTag matches a string consisting of a single HTML element with no attributes
+  // and captures the element's name
+
+  return /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 });
 define(function () {
   "use strict";
