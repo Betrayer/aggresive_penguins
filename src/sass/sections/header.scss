@@ -21,14 +21,9 @@
   z-index: 2;
   left: 0;
   top: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   width: 100%;
-  height: auto;
   background-color: #fff;
-  background-size: cover;
-  align-items: flex-end;
+  border-bottom: 1px solid #576664;
 }
 
 .header__menu {
@@ -191,36 +186,6 @@
   margin-bottom: 20px;
 }
 
-.header__list {
-  font-family: $open_sans_font;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 36px;
-  list-style-image: url(../../images/arrow.png);
-  padding-left: 14px;
-  margin-bottom: 24px;
-  
-  &--li {
-    padding-left: 8px;
-  }
-
-  &__link {
-    display: inline-block;
-    color: white;
-    background-color: #1ab798;
-    padding: 16px 40px 16px 76px;
-    background-image: url(../../images/clowd.png);
-    background-repeat: no-repeat;
-    border-radius: 5px;
-    background-position-y: 50%;
-    background-position-x: 22px;
-    font-family: $open_sans_font;
-    font-size: 20px;
-    font-weight: 600;
-    margin-left: 20px;
-  }
-}
-
 .content {
   left: 0;
   color: white;
@@ -245,7 +210,7 @@
     font-size: 12px;
     font-weight: 600;
     line-height: 36px;
-    list-style-image: url(../../images/arrow.png);
+    list-style-image: url(../images/arrow.png);
     padding-left: 14px;
     margin-bottom: 24px;
 
@@ -259,7 +224,7 @@
     color: white;
     background-color: #1ab798;
     padding: 16px 40px 16px 76px;
-    background-image: url(../../images/clowd.png);
+    background-image: url(../images/clowd.png);
     background-repeat: no-repeat;
     border-radius: 5px;
     background-position-y: 50%;
@@ -275,7 +240,7 @@
   .head {
     height: 758px;
     padding-top: 28px;
-    background-image: url(../../images/img_tablet.png);
+    background-image: url(../images/img_tablet.png);
   }
 
   .header__overlay {
@@ -326,13 +291,14 @@
     &::before {
       display: block;
       content: '';
-      background-image: url(../../images/gif.gif);
+      background-image: url(../images/gif.gif);
       width: 150px;
       height: 266px;
       background-repeat: no-repeat;
       background-size: cover;
       position: absolute;
-      right: 144px;
+      left: 50%;
+      margin-left: 90px;
       top: 502px;
       z-index: 1;
     }
@@ -357,26 +323,28 @@
     &::before {
       display: block;
       content: '';
-      background-image: url(../../images/phone2.png);
+      background-image: url(../images/phone2.png);
       width: 256px;
       height: 444px;
       background-repeat: no-repeat;
       background-size: cover;
       position: absolute;
-      right: 30px;
+      left: 50%;
+      margin-left: 100px;
       top: 406px;
     }
 
     &::after {
       display: block;
       content: '';
-      background-image: url(../../images/phone1.png);
+      background-image: url(../images/phone1.png);
       width: 232px;
       height: 403px;
       background-repeat: no-repeat;
       background-size: cover;
       position: absolute;
-      right: 100px;
+      left: 50%;
+      margin-left: 52px;
       top: 450px;
     }
   }
@@ -384,7 +352,7 @@
 
 @media (min-width: 1200px) {
   .head {
-    background-image: url(../../images/img_desktop.png);
+    background-image: url(../images/img_desktop.png);
   }
 
   .header__overlay {
@@ -402,13 +370,14 @@
   .content__h3::before {
     display: block;
     content: '';
-    background-image: url(../../images/gif.gif);
+    background-image: url(../images/gif.gif);
     width: 220px;
     height: 389px;
     background-repeat: no-repeat;
     background-size: cover;
     position: absolute;
-    right: 245px;
+    left: 50%;
+    margin-left: 160px;
     top: 362px;
     z-index: 1;
   }
@@ -417,26 +386,28 @@
     &::before {
       display: block;
       content: '';
-      background-image: url(../../images/phone2_big.png);
+      background-image: url(../images/phone2_big.png);
       width: 382px;
       height: 663px;
       background-repeat: no-repeat;
       background-size: cover;
       position: absolute;
-      right: 80px;
+      left: 50%;
+      margin-left: 170px;
       top: 220px;
     }
 
     &::after {
       display: block;
       content: '';
-      background-image: url(../../images/phone1_big.png);
+      background-image: url(../images/phone1_big.png);
       width: 346px;
       height: 600px;
       background-repeat: no-repeat;
       background-size: cover;
       position: absolute;
-      right: 178px;
+      left: 50%;
+      margin-left: 100px;
       top: 282px;
     }
   }
