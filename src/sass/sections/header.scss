@@ -129,7 +129,7 @@ input[type='“radio”'].visually-hidden {
 
   &.act {
 	margin-top: -22px;
-    height: 100vh;
+    height: 570px;
     opacity: 1;
     transform: scale(1);
 
@@ -348,7 +348,7 @@ input[type='“radio”'].visually-hidden {
 
 @media (min-width: 768px) and (max-width: 1199px) {
 
-	.content__link{
+	.content__list--li{
 		&::before {
 			display: block;
 			content: "";
@@ -395,7 +395,7 @@ input[type='“radio”'].visually-hidden {
     margin-top: 252px;
   }
 
-	.content__link{
+	.content__list--li{
 		&::before {
 			display: block;
 			content: "";
