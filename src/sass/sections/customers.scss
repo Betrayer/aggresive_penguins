@@ -1,6 +1,7 @@
 .customer-section {
   text-align: center;
   padding: 52px 0px 60px;
+
   &__heading {
     width: 156px;
     margin: 0 auto;
@@ -227,6 +228,7 @@
 @media (min-width: 768px) {
   .customer-section {
     padding: 95px 0px 108px;
+    
     &__heading {
       width: 590px;
       margin: 0 auto;
