@@ -307,7 +307,8 @@ template {
   box-sizing: inherit; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+ Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
 
 .visually-hidden:not(:focus):not(:active),
 input[type="checkbox"].visually-hidden,
@@ -557,7 +558,7 @@ button {
   font-size: 12px;
   font-weight: 600;
   line-height: 36px;
-  list-style-image: url(../../images/arrow.png);
+  list-style-image: url(../images/arrow.png);
   padding-left: 14px;
   margin-bottom: 24px; }
   .header__list--li {
@@ -567,7 +568,7 @@ button {
     color: white;
     background-color: #1ab798;
     padding: 16px 40px 16px 76px;
-    background-image: url(../../images/clowd.png);
+    background-image: url(../images/clowd.png);
     background-repeat: no-repeat;
     border-radius: 5px;
     background-position-y: 50%;
@@ -596,7 +597,7 @@ button {
     font-size: 12px;
     font-weight: 600;
     line-height: 36px;
-    list-style-image: url(../../images/arrow.png);
+    list-style-image: url(../images/arrow.png);
     padding-left: 14px;
     margin-bottom: 24px; }
     .content__list--li {
@@ -606,7 +607,7 @@ button {
     color: white;
     background-color: #1ab798;
     padding: 16px 40px 16px 76px;
-    background-image: url(../../images/clowd.png);
+    background-image: url(../images/clowd.png);
     background-repeat: no-repeat;
     border-radius: 5px;
     background-position-y: 50%;
@@ -620,7 +621,7 @@ button {
   .head {
     height: 758px;
     padding-top: 28px;
-    background-image: url(../../images/img_tablet.png); }
+    background-image: url(../images/img_tablet.png); }
   .header__overlay {
     width: 708px; }
   .nav-elements {
@@ -652,7 +653,7 @@ button {
     .content__h3::before {
       display: block;
       content: '';
-      background-image: url(../../images/gif.gif);
+      background-image: url(../images/gif.gif);
       width: 150px;
       height: 266px;
       background-repeat: no-repeat;
@@ -673,7 +674,7 @@ button {
   .content__list--li::before {
     display: block;
     content: '';
-    background-image: url(../../images/phone2.png);
+    background-image: url(../images/phone2.png);
     width: 256px;
     height: 444px;
     background-repeat: no-repeat;
@@ -684,7 +685,7 @@ button {
   .content__list--li::after {
     display: block;
     content: '';
-    background-image: url(../../images/phone1.png);
+    background-image: url(../images/phone1.png);
     width: 232px;
     height: 403px;
     background-repeat: no-repeat;
@@ -695,7 +696,7 @@ button {
 
 @media (min-width: 1200px) {
   .head {
-    background-image: url(../../images/img_desktop.png); }
+    background-image: url(../images/img_desktop.png); }
   .header__overlay {
     width: 1145px; }
   .header__menu {
@@ -705,7 +706,7 @@ button {
   .content__h3::before {
     display: block;
     content: '';
-    background-image: url(../../images/gif.gif);
+    background-image: url(../images/gif.gif);
     width: 220px;
     height: 389px;
     background-repeat: no-repeat;
@@ -717,7 +718,7 @@ button {
   .content__list--li::before {
     display: block;
     content: '';
-    background-image: url(../../images/phone2_big.png);
+    background-image: url(../images/phone2_big.png);
     width: 382px;
     height: 663px;
     background-repeat: no-repeat;
@@ -728,7 +729,7 @@ button {
   .content__list--li::after {
     display: block;
     content: '';
-    background-image: url(../../images/phone1_big.png);
+    background-image: url(../images/phone1_big.png);
     width: 346px;
     height: 600px;
     background-repeat: no-repeat;
@@ -856,7 +857,7 @@ button {
   .feature__star::after {
     display: block;
     content: '';
-    background-image: url(../../images/screen.png);
+    background-image: url(../images/screen.png);
     width: 418px;
     height: 726px;
     background-repeat: no-repeat;
