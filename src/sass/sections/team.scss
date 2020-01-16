@@ -1,6 +1,7 @@
  .team-section {
   background-color: #fff;
   padding: 50px 0px 52px;
+
   &__name {
     font-family: 'Raleway', sans-serif;
     font-size: 18px;
@@ -12,6 +13,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 22px;
+
     &:before,
     &:after {
       content: '';
@@ -19,6 +21,7 @@
       height: 1px;
       background-color: #babdc1;
     }
+
     &:before {
       margin-right: 24px;
     }
@@ -27,6 +30,7 @@
       margin-left: 24px;
     }
   }
+
   &__text {
     font-family: $open_sans_font;
     font-size: 16px;
@@ -41,6 +45,7 @@
 .team-list {
   &__item {
     transition: 0.2s linear;
+
     &:hover .overlay {
       opacity: 1;
       visibility: visible;
@@ -53,6 +58,7 @@
       position: relative;
       transition: 0.2s linear;
     }
+
     &--name {
       font-family: $open_sans_font;
       font-size: 18px;
@@ -62,6 +68,7 @@
       color: #0eb493;
       margin-bottom: 10px;
     }
+
     &--occupation {
       font-family: $open_sans_font;
       font-size: 13px;
@@ -88,6 +95,7 @@
   opacity: 0;
   visibility: hidden;
   transition: 0.2s linear;
+
   &__heading {
     width: 226px;
     font-family: $open_sans_font;
@@ -96,6 +104,7 @@
     font-weight: 700;
     padding: 18px 0px 12px;
   }
+
   &__text {
     width: 226px;
     font-family: $open_sans_font;
@@ -104,31 +113,39 @@
     font-weight: 400;
     margin-bottom: 64px;
   }
+
   &__socials-list {
     display: flex;
+
     &--item {
       width: 42px;
       height: 42px;
       background-color: rgba(0, 0, 0, 0.3);
       transition: 0.2s linear;
+
       &:hover {
         background-color: rgba(0, 0, 0, 0.65);
       }
+
       &:not(:last-child) {
         margin-right: 4px;
       }
+
       & {
         background-size: 22px;
         background-repeat: no-repeat;
         background-position: center;
         cursor: pointer;
       }
+
       &:nth-child(1) {
         background-image: url(../images/icons/icon-twitter.svg);
       }
+
       &:nth-child(2) {
         background-image: url(../images/icons/icon-facebook.svg);
       }
+
       &:nth-child(3) {
         background-image: url(../images/icons/icon-linkedin.svg);
       }
@@ -149,12 +166,11 @@
   .team-section {
     padding: 104px 0px 95px;
   }
-}
 
-@media (min-width: 768px) and (max-width: 1199px) {
   .team-list__item {
     margin-bottom: 55px;
   }
+
   .team-list__item:nth-child(n + 3) {
     margin-bottom: 0px;
   }
@@ -168,13 +184,16 @@
     font-size: 28px;
     line-height: 1.2;
     letter-spacing: -1px;
+
     &:before {
       margin-right: 13px;
     }
+
     &:after {
       margin-left: 13px;
     }
   }
+
   &__text {
     width: 550px;
     margin: 0 auto;
@@ -207,6 +226,7 @@
 
   .team-section {
     padding: 90px 0px 125px;
+
     &__text{
       font-weight: 600;
       width: 970px;
