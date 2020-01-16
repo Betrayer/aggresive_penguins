@@ -1,0 +1,140 @@
+.our-project-slider-info{
+    margin: 0 auto;
+
+}
+.our-projects{
+    background: linear-gradient(to right, #78ffd6, #007991);
+}
+.slider-name{
+    font-family: $raleway__font;
+    font-size: 38px;
+    color: $main_text_color;
+}
+.lider-show-bag{
+    width: auto;
+    height: 140px;
+}
+.slider-show{
+    display: flex;
+    justify-content: space-between;
+}
+.slider-name{
+    font-family: $raleway__font;
+    font-size: 30px;
+    line-height: 36px;
+    font-weight: 900;
+    color: white;
+    text-align: center;
+    margin-bottom: 22px;
+    padding-top: 30px;
+    text-transform: uppercase;
+}
+.slider-name{
+    display: flex;
+    margin: 0 auto;
+    padding-top: 20px;
+    align-items: center;
+    width: 290px;
+    padding-bottom: 30px;
+}
+.slider-name::before,
+.slider-name::after{
+    display: block;
+    content: "";
+    width: 60px;
+    height: 1px;
+    background-color: #ffffff;
+    margin: 0 auto;
+}
+.slider-show-bag{
+    width: 270px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+.fade{
+display: flex;
+justify-content: space-between;
+}
+.slider-text-right{
+    display: block;
+    width: auto;}
+.slider-text-right{
+    font-family: $raleway__font;
+    color: $main_text_color;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: justify;
+    padding-bottom: 20px;
+}
+.slider-text{
+    display: none;
+}
+.slider-show{
+    width: auto;
+}
+.spaider-name-description{
+    font-family: $raleway__font;
+    color: $color_white;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.5;
+    text-align: justify;
+    padding-bottom: 20px;
+    text-transform: uppercase;
+}
+@media (min-width: 768px){
+.slider-text{
+        display: block;
+        width: 500px;
+        margin-left: 30px;
+}
+.our-projects{
+    padding-bottom: 30px;
+}
+.icon-users-team{
+    width: 50px;
+    height: 50px;
+    background-image: url(../images/slider-work/users.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.icon-users-work{
+    width: 50px;
+    height: 50px;
+    background-image: url(../images/slider-work/clipboard.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+}
+
+@media (min-width: 1200px){
+    .slider-text{
+        width: 800px;
+    }
+    .slider-text{
+      
+    .slider-show-bag{
+        width: 330px;
+    }
+}
+
+
+
+/* Fading animation */
+.fade {
+    -webkit-animation-name: slider-show-bag;
+    -webkit-animation-duration: 1.5s;
+    animation-name: slider-show-bag;
+    animation-duration: 1.5s;
+  }
+  @-webkit-keyframes slider-show-bag {
+    from {opacity: .4}
+    to {opacity: 1}
+  }
+  
+  @keyframes slider-show-bag {
+    from {opacity: .4}
+    to {opacity: 1}
+  }
+}
