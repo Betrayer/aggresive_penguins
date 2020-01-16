@@ -1,3 +1,13 @@
+$('#to-header').on('click', function() {
+    const images = $('#header').position().top;
+    
+    $('html, body'). animate(
+    {
+        scrollTop: images
+    }, 
+    900);
+}) ;
+
 $('#to-features').on('click', function() {
     const images = $('#features').position().top;
     

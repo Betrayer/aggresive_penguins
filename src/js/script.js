@@ -9,4 +9,9 @@ $(document).ready(function(){
 				$('.mainMenu').removeClass('act');
 			}
 	});
+
+	$('.mainMenu__link').click(function() {
+		$('.menuBtn').removeClass('act');
+		$('.mainMenu').removeClass('act');
+	});
 });
