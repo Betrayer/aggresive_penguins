@@ -57,7 +57,8 @@
 }
 
 .slider-show-bag {
-  width: 270px;
+  width: auto;
+  height: 350px;
   margin: 0 auto;
   padding-bottom: 20px;
 }
@@ -87,12 +88,12 @@
 }
 
 .slider-show {
-  width: auto;
+  width: 300px;
 }
 
 .spaider-name-description {
   font-family: $raleway__font;
-  color: $color_white;
+  color: #2c2c2c;
   font-size: 20px;
   font-weight: 900;
   line-height: 1.2;
