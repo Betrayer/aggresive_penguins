@@ -34614,6 +34614,12 @@ define(function () {
   return /\?/;
 });
 define(function () {
+  "use strict"; // rsingleTag matches a string consisting of a single HTML element with no attributes
+  // and captures the element's name
+
+  return /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
+});
+define(function () {
   "use strict";
 
   return ["Top", "Right", "Bottom", "Left"];
@@ -34713,12 +34719,6 @@ define(["../Data"], function (Data) {
   "use strict";
 
   return new Data();
-});
-define(function () {
-  "use strict"; // rsingleTag matches a string consisting of a single HTML element with no attributes
-  // and captures the element's name
-
-  return /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 });
 define(function () {
   "use strict";
