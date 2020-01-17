@@ -31659,180 +31659,6 @@ define(["./class2type"], function (class2type) {
 
   return class2type.toString;
 });
-define(function () {
-  "use strict";
-
-  return window.location;
-});
-define(function () {
-  "use strict";
-
-  return Date.now();
-});
-define(function () {
-  "use strict";
-
-  return /\?/;
-});
-define(function () {
-  "use strict"; // rsingleTag matches a string consisting of a single HTML element with no attributes
-  // and captures the element's name
-
-  return /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
-});
-define(function () {
-  "use strict";
-
-  return ["Top", "Right", "Bottom", "Left"];
-});
-define(function () {
-  "use strict";
-
-  return function (elem) {
-    // Support: IE <=11 only, Firefox <=30 (#15098, #14150)
-    // IE throws on elements created in popups
-    // FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
-    var view = elem.ownerDocument.defaultView;
-
-    if (!view || !view.opener) {
-      view = window;
-    }
-
-    return view.getComputedStyle(elem);
-  };
-});
-define(["../../core", "../../core/isAttached" // css is assumed
-], function (jQuery, isAttached) {
-  "use strict"; // isHiddenWithinTree reports if an element has a non-"none" display style (inline and/or
-  // through the CSS cascade), which is useful in deciding whether or not to make it visible.
-  // It differs from the :hidden selector (jQuery.expr.pseudos.hidden) in two important ways:
-  // * A hidden ancestor does not force an element to be classified as hidden.
-  // * Being disconnected from the document does not force an element to be classified as hidden.
-  // These differences improve the behavior of .toggle() et al. when applied to elements that are
-  // detached or contained within hidden ancestors (gh-2404, gh-2863).
-
-  return function (elem, el) {
-    // isHiddenWithinTree might be called from jQuery#filter function;
-    // in that case, element will be second argument
-    elem = el || elem; // Inline style trumps all
-
-    return elem.style.display === "none" || elem.style.display === "" && // Otherwise, check computed style
-    // Support: Firefox <=43 - 45
-    // Disconnected elements can have computed display: none, so first confirm that elem is
-    // in the document.
-    isAttached(elem) && jQuery.css(elem, "display") === "none";
-  };
-});
-define(["./cssExpand"], function (cssExpand) {
-  "use strict";
-
-  return new RegExp(cssExpand.join("|"), "i");
-});
-define(["../../var/pnum"], function (pnum) {
-  "use strict";
-
-  return new RegExp("^(" + pnum + ")(?!px)[a-z%]+$", "i");
-});
-define(function () {
-  "use strict"; // A method for quickly swapping in/out CSS properties to get correct calculations.
-
-  return function (elem, options, callback, args) {
-    var ret,
-        name,
-        old = {}; // Remember the old values, and insert the new ones
-
-    for (name in options) {
-      old[name] = elem.style[name];
-      elem.style[name] = options[name];
-    }
-
-    ret = callback.apply(elem, args || []); // Revert the old values
-
-    for (name in options) {
-      elem.style[name] = old[name];
-    }
-
-    return ret;
-  };
-});
-define(function () {
-  "use strict";
-  /**
-   * Determines whether an object can have data
-   */
-
-  return function (owner) {
-    // Accepts only:
-    //  - Node
-    //    - Node.ELEMENT_NODE
-    //    - Node.DOCUMENT_NODE
-    //  - Object
-    //    - Any
-    return owner.nodeType === 1 || owner.nodeType === 9 || !+owner.nodeType;
-  };
-});
-define(["../Data"], function (Data) {
-  "use strict";
-
-  return new Data();
-});
-define(["../Data"], function (Data) {
-  "use strict";
-
-  return new Data();
-});
-define(function () {
-  "use strict";
-
-  return /^$|^module$|\/(?:java|ecma)script/i;
-});
-define(function () {
-  "use strict"; // rtagName captures the name from the first start tag in a string of HTML
-  // https://html.spec.whatwg.org/multipage/syntax.html#tag-open-state
-  // https://html.spec.whatwg.org/multipage/syntax.html#tag-name-state
-
-  return /<([a-z][^\/\0>\x20\t\r\n\f]*)/i;
-});
-define(["../../core"], function (jQuery) {
-  "use strict";
-
-  return function (elem, dir, until) {
-    var matched = [],
-        truncate = until !== undefined;
-
-    while ((elem = elem[dir]) && elem.nodeType !== 9) {
-      if (elem.nodeType === 1) {
-        if (truncate && jQuery(elem).is(until)) {
-          break;
-        }
-
-        matched.push(elem);
-      }
-    }
-
-    return matched;
-  };
-});
-define(["../../core", "../../selector"], function (jQuery) {
-  "use strict";
-
-  return jQuery.expr.match.needsContext;
-});
-define(function () {
-  "use strict";
-
-  return function (n, elem) {
-    var matched = [];
-
-    for (; n; n = n.nextSibling) {
-      if (n.nodeType === 1 && n !== elem) {
-        matched.push(n);
-      }
-    }
-
-    return matched;
-  };
-});
 /*!
  * Sizzle CSS Selector Engine v2.3.4
  * https://sizzlejs.com/
@@ -34772,3 +34598,177 @@ define(function () {
     return le;
   }) : "undefined" != typeof module && module.exports ? module.exports = le : e.Sizzle = le;
 }(window);
+define(function () {
+  "use strict";
+
+  return window.location;
+});
+define(function () {
+  "use strict";
+
+  return Date.now();
+});
+define(function () {
+  "use strict";
+
+  return /\?/;
+});
+define(function () {
+  "use strict"; // rsingleTag matches a string consisting of a single HTML element with no attributes
+  // and captures the element's name
+
+  return /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
+});
+define(function () {
+  "use strict";
+
+  return ["Top", "Right", "Bottom", "Left"];
+});
+define(function () {
+  "use strict";
+
+  return function (elem) {
+    // Support: IE <=11 only, Firefox <=30 (#15098, #14150)
+    // IE throws on elements created in popups
+    // FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
+    var view = elem.ownerDocument.defaultView;
+
+    if (!view || !view.opener) {
+      view = window;
+    }
+
+    return view.getComputedStyle(elem);
+  };
+});
+define(["../../core", "../../core/isAttached" // css is assumed
+], function (jQuery, isAttached) {
+  "use strict"; // isHiddenWithinTree reports if an element has a non-"none" display style (inline and/or
+  // through the CSS cascade), which is useful in deciding whether or not to make it visible.
+  // It differs from the :hidden selector (jQuery.expr.pseudos.hidden) in two important ways:
+  // * A hidden ancestor does not force an element to be classified as hidden.
+  // * Being disconnected from the document does not force an element to be classified as hidden.
+  // These differences improve the behavior of .toggle() et al. when applied to elements that are
+  // detached or contained within hidden ancestors (gh-2404, gh-2863).
+
+  return function (elem, el) {
+    // isHiddenWithinTree might be called from jQuery#filter function;
+    // in that case, element will be second argument
+    elem = el || elem; // Inline style trumps all
+
+    return elem.style.display === "none" || elem.style.display === "" && // Otherwise, check computed style
+    // Support: Firefox <=43 - 45
+    // Disconnected elements can have computed display: none, so first confirm that elem is
+    // in the document.
+    isAttached(elem) && jQuery.css(elem, "display") === "none";
+  };
+});
+define(["./cssExpand"], function (cssExpand) {
+  "use strict";
+
+  return new RegExp(cssExpand.join("|"), "i");
+});
+define(["../../var/pnum"], function (pnum) {
+  "use strict";
+
+  return new RegExp("^(" + pnum + ")(?!px)[a-z%]+$", "i");
+});
+define(function () {
+  "use strict"; // A method for quickly swapping in/out CSS properties to get correct calculations.
+
+  return function (elem, options, callback, args) {
+    var ret,
+        name,
+        old = {}; // Remember the old values, and insert the new ones
+
+    for (name in options) {
+      old[name] = elem.style[name];
+      elem.style[name] = options[name];
+    }
+
+    ret = callback.apply(elem, args || []); // Revert the old values
+
+    for (name in options) {
+      elem.style[name] = old[name];
+    }
+
+    return ret;
+  };
+});
+define(function () {
+  "use strict";
+  /**
+   * Determines whether an object can have data
+   */
+
+  return function (owner) {
+    // Accepts only:
+    //  - Node
+    //    - Node.ELEMENT_NODE
+    //    - Node.DOCUMENT_NODE
+    //  - Object
+    //    - Any
+    return owner.nodeType === 1 || owner.nodeType === 9 || !+owner.nodeType;
+  };
+});
+define(["../Data"], function (Data) {
+  "use strict";
+
+  return new Data();
+});
+define(["../Data"], function (Data) {
+  "use strict";
+
+  return new Data();
+});
+define(function () {
+  "use strict";
+
+  return /^$|^module$|\/(?:java|ecma)script/i;
+});
+define(function () {
+  "use strict"; // rtagName captures the name from the first start tag in a string of HTML
+  // https://html.spec.whatwg.org/multipage/syntax.html#tag-open-state
+  // https://html.spec.whatwg.org/multipage/syntax.html#tag-name-state
+
+  return /<([a-z][^\/\0>\x20\t\r\n\f]*)/i;
+});
+define(["../../core"], function (jQuery) {
+  "use strict";
+
+  return function (elem, dir, until) {
+    var matched = [],
+        truncate = until !== undefined;
+
+    while ((elem = elem[dir]) && elem.nodeType !== 9) {
+      if (elem.nodeType === 1) {
+        if (truncate && jQuery(elem).is(until)) {
+          break;
+        }
+
+        matched.push(elem);
+      }
+    }
+
+    return matched;
+  };
+});
+define(["../../core", "../../selector"], function (jQuery) {
+  "use strict";
+
+  return jQuery.expr.match.needsContext;
+});
+define(function () {
+  "use strict";
+
+  return function (n, elem) {
+    var matched = [];
+
+    for (; n; n = n.nextSibling) {
+      if (n.nodeType === 1 && n !== elem) {
+        matched.push(n);
+      }
+    }
+
+    return matched;
+  };
+});
